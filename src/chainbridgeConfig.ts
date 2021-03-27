@@ -15,12 +15,15 @@ export type BridgeConfig = {
   networkId: number;
   name: string;
   bridgeAddress: string;
-  erc20HandlerAddress: string;
+  genericHandlerAddress: string;
+  tokenVaultAddress: string;
+  controllerAddress: string;
   rpcUrl: string;
   type: "Ethereum" | "Substrate";
   tokens: TokenConfig[];
   nativeTokenSymbol: string;
-  //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
+  // NOTE: This should be the full path to display a tx hash,
+  // without the trailing slash, ie. https://etherscan.io/tx
   blockExplorer?: string;
   defaultGasPrice?: number;
 };
@@ -30,106 +33,52 @@ export type ChainbridgeConfig = {
 };
 
 export const chainbridgeConfig: ChainbridgeConfig = {
-  // Goerli - Kotti Bridge
   chains: [
     {
-      chainId: 1,
-      networkId: 5,
-      name: "Ethereum - Goerli",
-      bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
-      erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
-      rpcUrl: "https://goerli.prylabs.net",
+      chainId: 251,
+      networkId: 99999991,
+      name: "gethBaseChain",
+      bridgeAddress: "0xF9FB5a5D90a4cE57ef66488BD5737d1da934b65d",
+      genericHandlerAddress: "0xB78b87EdBE1598EC399fC369AbfA4370D4D764bc",
+      tokenVaultAddress: "0xB6b88D3Bf5F7e3E10a17b34098387fD1e81Bb43C",
+      controllerAddress: "0x58487019cf0d712519fAF6741132b015407A3B1A",
+      rpcUrl: "http://localhost:7545",
+      type: "Ethereum",
+      blockExplorer: "https://goerli.etherscan.io/tx",
+      nativeTokenSymbol: "AMPL",
+      tokens: [
+        {
+          address: "0x299D8C3c7C8DBb12D4f1E5bC87FA298E2Eab8f9d",
+          name: "Ampleforth",
+          symbol: "AMPL",
+          imageUri: WETHIcon,
+          resourceId:
+            "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
+        }
+      ],
+    },
+    {
+      chainId: 252,
+      networkId: 99999992,
+      name: "gethSatChain1",
+      bridgeAddress: "0xD7e36FC5540986f20e42a5941777Ec333b4Cf875",
+      genericHandlerAddress: "0xF63DC56cD7B55DE02A0341A5F4bbFAf9657721D9",
+      tokenVaultAddress: "0xF63DC56cD7B55DE02A0341A5F4bbFAf9657721D9",
+      controllerAddress: "0x6EcA26B05c70D2c63Cebc53Dd73aaa8fE579F56C",
+      rpcUrl: "http://localhost:7550",
       type: "Ethereum",
       blockExplorer: "https://goerli.etherscan.io/tx",
       nativeTokenSymbol: "ETH",
       tokens: [
         {
-          address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
-          name: "Wrapped ETC",
-          symbol: "wETC",
+          address: "0x299D8C3c7C8DBb12D4f1E5bC87FA298E2Eab8f9d",
+          name: "XC-Ample",
+          symbol: "xcAmple",
           imageUri: WETHIcon,
           resourceId:
-            "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
-        },
-        {
-          address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
-          name: "An ERC20",
-          symbol: "ERC20",
-          imageUri: ETHIcon,
-          resourceId:
-            "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
-        },
+            "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
+        }
       ],
-    },
-    {
-      chainId: 2,
-      networkId: 6,
-      name: "Ethereum Classic - Kotti",
-      bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
-      erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
-      rpcUrl: "https://www.ethercluster.com/kotti",
-      type: "Ethereum",
-      blockExplorer: "https://blockscout.com/etc/kotti/tx",
-      nativeTokenSymbol: "ETC",
-      tokens: [
-        {
-          address: "0x23A9FD05ef0c5fb9dDE964C4d4191A169Fd221f8",
-          name: "Wrapped ETC",
-          symbol: "wETC",
-          imageUri: WETHIcon,
-          resourceId:
-            "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
-          isNativeWrappedToken: true,
-        },
-        {
-          address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
-          name: "An ERC20",
-          symbol: "ERC20",
-          imageUri: ETHIcon,
-          resourceId:
-            "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
-        },
-      ],
-    },
+    }
   ],
-
-  // DEVNET
-  //   erc20ResourceId:
-  //   "0x00000000000000000000000021605f71845f372A9ed84253d2D024B7B10999f4",
-  // chains: [
-  // {
-  //   chainId: 1,
-  //   networkId: 5,
-  //   name: "Ethereum - A",
-  //   bridgeAddress: "0x62877dDCd49aD22f5eDfc6ac108e9a4b5D2bD88B",
-  //   erc20HandlerAddress: "0x3167776db165D8eA0f51790CA2bbf44Db5105ADF",
-  //   rpcUrl: "http://localhost:8545",
-  //   type: "Ethereum",
-  //   tokens: [
-  //     {
-  //       address: "0x21605f71845f372A9ed84253d2D024B7B10999f4",
-  //       name: "Test EthA",
-  //       symbol: "TESTA",
-  //       imageUri: ETHIcon,
-  //     },
-  //   ],
-  // },
-  // {
-  //   chainId: 2,
-  //   networkId: 6,
-  //   name: "Ethereum - B",
-  //   bridgeAddress: "0x62877dDCd49aD22f5eDfc6ac108e9a4b5D2bD88B",
-  //   erc20HandlerAddress: "0x3167776db165D8eA0f51790CA2bbf44Db5105ADF",
-  //   rpcUrl: "http://localhost:8546",
-  //   type: "Ethereum",
-  //   tokens: [
-  //     {
-  //       address: "0x21605f71845f372A9ed84253d2D024B7B10999f4",
-  //       name: "Test EthB",
-  //       symbol: "TESTB",
-  //       imageUri: ETHIcon,
-  //     },
-  //   ],
-  // },
-  // ]
 };

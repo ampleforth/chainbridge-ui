@@ -107,11 +107,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
           <section className={classes.navTabs}>
             <NavLink activeClassName="active" to={ROUTE_LINKS.Transfer}>
               <GlobalSvg />
-              <Typography variant="h5">Transfer</Typography>
-            </NavLink>
-            <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
-              <GiftSvg />
-              <Typography variant="h5">Wrap token</Typography>
+              <Typography variant="h5">Cross-Chain Transfer</Typography>
             </NavLink>
           </section>
           <div className={classes.pageArea}>{children}</div>

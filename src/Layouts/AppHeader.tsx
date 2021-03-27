@@ -65,11 +65,10 @@ const AppHeader: React.FC<IAppHeader> = () => {
   return (
     <header className={clsx(classes.root)}>
       <div className={classes.left}>
-        {/* ADD LOGO HERE */}
-        {/* <div className={classes.logo}>
-        
-        </div> */}
-        <Typography variant="h4">ChainBridge Token Swap</Typography>
+        <div className={classes.logo}>
+          <img src="/ample-logo/logo.png"/>
+        </div>
+        <Typography variant="h4">Bridge</Typography>
       </div>
       <section className={classes.state}>
         {!isReady ? (

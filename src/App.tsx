@@ -8,7 +8,7 @@ import {
 } from "@chainsafe/common-components";
 
 import Routes from "./Components/Routes";
-import { lightTheme } from "./Themes/LightTheme";
+import { ampleTheme } from "./Themes/AmpleforthTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
 import { Web3Provider } from "@chainsafe/web3-context";
@@ -53,7 +53,7 @@ const App: React.FC<{}> = () => {
       )}
       onReset={() => window.location.reload()}
     >
-      <ThemeSwitcher themes={{ light: lightTheme }}>
+      <ThemeSwitcher themes={{ light: ampleTheme }}>
         <CssBaseline />
         <ToasterProvider autoDismiss>
           <Web3Provider

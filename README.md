@@ -47,7 +47,7 @@ type BridgeConfig = {
   networkId: number // The networkId of this chain.
   name: string // The human readable name of this chain.
   bridgeAddress: string // The address on the brdige contract deployed on this chain.
-  erc20HandlerAddress: string // The ERC20 handler address.
+  genericHandlerAddress: string // The ERC20 handler address.
   rpcUrl: string // An RPC URL for this chain.
   type: "Ethereum" | "Substrate" // The type of chain.
   tokens: TokenConfig[] // An object to configure the tokens this bridge can transfer. See the TokenConfig object below.

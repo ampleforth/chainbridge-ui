@@ -11,6 +11,7 @@ import {
   utils,
 } from "ethers";
 import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
+import { XCAmpleControllerFactory } from "../Contracts/XCAmpleControllerFactory";
 import {
   BridgeConfig,
   chainbridgeConfig,
@@ -244,6 +245,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
   useEffect(() => {
     if (homeChain && destinationBridge && depositNonce) {
+      console.log('listening here!', destinationBridge, depositNonce);
       destinationBridge.on(
         destinationBridge.filters.ProposalEvent(
           homeChain.chainId,
@@ -346,55 +348,80 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     setDepositAmount(amount);
     setSelectedToken(tokenAddress);
     const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
+    const controller = XCAmpleControllerFactory.connect(homeChain.controllerAddress, signer);
     const erc20Decimals = tokens[tokenAddress].decimals;
 
-    const data =
-      "0x" +
-      utils
-        .hexZeroPad(
-          // TODO Wire up dynamic token decimals
-          BigNumber.from(
-            utils.parseUnits(amount.toString(), erc20Decimals)
-          ).toHexString(),
-          32
-        )
-        .substr(2) + // Deposit Amount (32 bytes)
-      utils
-        .hexZeroPad(utils.hexlify((recipient.length - 2) / 2), 32)
-        .substr(2) + // len(recipientAddress) (32 bytes)
-      recipient.substr(2); // recipientAddress (?? bytes)
+    const toHex = (covertThis:number, padding:number):string => {
+      return ethers.utils.hexZeroPad(ethers.utils.hexlify(covertThis), padding);
+    };
+
+    const createGenericDepositData = (hexMetaData:string):string => {
+      if (hexMetaData === null) {
+        return '0x' + toHex(0, 32).substr(2);
+      }
+      const hexMetaDataLength = hexMetaData.substr(2).length / 2;
+      return '0x' + toHex(hexMetaDataLength, 32).substr(2) + hexMetaData.substr(2);
+    };
+
+    const packXCTransferData = (depositor:string, recipient:string, amount:BigNumberish, totalSupply:BigNumberish):string => {
+      return createGenericDepositData(
+        ethers.utils.defaultAbiCoder.encode(
+          ['address', 'address', 'uint256', 'uint256'],
+          [depositor, recipient, amount, totalSupply],
+        ),
+      );
+    };
+
+    const [epoch, totalSupply] = await controller.globalAmpleforthEpochAndAMPLSupply();
+    const data = packXCTransferData(address, recipient, utils.parseUnits(amount.toString(), erc20Decimals), totalSupply);
+
+    // const data =
+    //   "0x" +
+    //   utils
+    //     .hexZeroPad(
+    //       // TODO Wire up dynamic token decimals
+    //       BigNumber.from(
+    //         utils.parseUnits(amount.toString(), erc20Decimals)
+    //       ).toHexString(),
+    //       32
+    //     )
+    //     .substr(2) + // Deposit Amount (32 bytes)
+    //   utils
+    //     .hexZeroPad(utils.hexlify((recipient.length - 2) / 2), 32)
+    //     .substr(2) + // len(recipientAddress) (32 bytes)
+    //   recipient.substr(2); // recipientAddress (?? bytes)
 
     try {
       const currentAllowance = await erc20.allowance(
         address,
-        homeChain.erc20HandlerAddress
+        homeChain.tokenVaultAddress
       );
 
       if (Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount) {
-        if (
-          Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
-          resetAllowanceLogicFor.includes(tokenAddress)
-        ) {
-          //We need to reset the user's allowance to 0 before we give them a new allowance
-          //TODO Should we alert the user this is happening here?
-          await (
-            await erc20.approve(
-              homeChain.erc20HandlerAddress,
-              BigNumber.from(utils.parseUnits("0", erc20Decimals)),
-              {
-                gasPrice: BigNumber.from(
-                  utils.parseUnits(
-                    (homeChain.defaultGasPrice || gasPrice).toString(),
-                    9
-                  )
-                ).toString(),
-              }
-            )
-          ).wait(1);
-        }
+        // if (
+        //   Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
+        //   resetAllowanceLogicFor.includes(tokenAddress)
+        // ) {
+        //   //We need to reset the user's allowance to 0 before we give them a new allowance
+        //   //TODO Should we alert the user this is happening here?
+        //   await (
+        //     await erc20.approve(
+        //       homeChain.tokenVaultAddress,
+        //       BigNumber.from(utils.parseUnits("0", erc20Decimals)),
+        //       {
+        //         gasPrice: BigNumber.from(
+        //           utils.parseUnits(
+        //             (homeChain.defaultGasPrice || gasPrice).toString(),
+        //             9
+        //           )
+        //         ).toString(),
+        //       }
+        //     )
+        //   ).wait(1);
+        // }
         await (
           await erc20.approve(
-            homeChain.erc20HandlerAddress,
+            homeChain.tokenVaultAddress,
             BigNumber.from(utils.parseUnits(amount.toString(), erc20Decimals)),
             {
               gasPrice: BigNumber.from(
@@ -420,7 +447,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         }
       );
 
-      await (
+      const tx = await (
         await homeBridge.deposit(
           destinationChain.chainId,
           token.resourceId,
@@ -434,6 +461,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           }
         )
       ).wait();
+      console.log(tx);
       return Promise.resolve();
     } catch (error) {
       console.log(error);
