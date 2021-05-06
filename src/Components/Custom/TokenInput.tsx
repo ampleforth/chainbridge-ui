@@ -4,6 +4,8 @@ import { useField, useFormikContext } from "formik";
 import { Button, FormikTextInput } from "@chainsafe/common-components";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
+import {safeRound} from "../../Utils/XCAmple";
+
 interface ITokenInput {
   disabled?: boolean;
   label: string;
@@ -42,7 +44,9 @@ const TokenInput: React.FC<ITokenInput> = ({
         className={classNames?.button}
         onClick={() => {
           helpers.setValue(
-            tokens[(values as Record<string, any>)[tokenSelectorKey]].balance
+            safeRound(
+              tokens[(values as Record<string, any>)[tokenSelectorKey]].balance,
+              tokens[(values as Record<string, any>)[tokenSelectorKey]].decimals)
           );
         }}
         variant="outline"

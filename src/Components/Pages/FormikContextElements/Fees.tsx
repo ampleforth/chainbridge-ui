@@ -22,15 +22,15 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
 
   return (
     <section className={className}>
-      {fee !== undefined && feeSymbol !== undefined && (
+      {(
         <>
           <Typography component="p">Bridge Fee</Typography>
           <Typography component="p">
-            {fee} {feeSymbol}
+            {fee||"0"} {feeSymbol}
           </Typography>
         </>
       )}
-      {symbol !== undefined && (
+      {(
         <>
           <Typography component="p">Transfer Amount:</Typography>
           <Typography component="p">

@@ -1,6 +1,7 @@
 import { useWeb3 } from "@chainsafe/web3-context";
 import React, { useContext, useEffect, useReducer, useState } from "react";
-import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
+import { Bridge } from "../Contracts/Bridge";
+import { BridgeFactory } from "../Contracts/BridgeFactory";
 import {
   BigNumber,
   BigNumberish,
@@ -11,6 +12,7 @@ import {
   utils,
 } from "ethers";
 import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
+import { XCAmpleControllerFactory } from "../Contracts/XCAmpleControllerFactory";
 import {
   BridgeConfig,
   chainbridgeConfig,
@@ -19,6 +21,7 @@ import {
 import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
 import { Weth } from "../Contracts/Weth";
 import { WethFactory } from "../Contracts/WethFactory";
+import { packXCTransferData } from "../Utils/XCAmple";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -233,14 +236,16 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       }
     };
     const getBridgeFee = async () => {
-      if (homeBridge) {
-        const bridgeFee = Number(utils.formatEther(await homeBridge._fee()));
+      if (homeBridge && destinationBridge) {
+        const targetChainID = await destinationBridge._chainID();
+        const fee = await homeBridge.getFee(targetChainID);
+        const bridgeFee = Number(utils.formatEther(fee));
         setBridgeFee(bridgeFee);
       }
     };
     getRelayerThreshold();
     getBridgeFee();
-  }, [homeBridge]);
+  }, [homeBridge, destinationBridge]);
 
   useEffect(() => {
     if (homeChain && destinationBridge && depositNonce) {
@@ -346,55 +351,44 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     setDepositAmount(amount);
     setSelectedToken(tokenAddress);
     const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
+    const controller = XCAmpleControllerFactory.connect(homeChain.controller, signer);
     const erc20Decimals = tokens[tokenAddress].decimals;
 
-    const data =
-      "0x" +
-      utils
-        .hexZeroPad(
-          // TODO Wire up dynamic token decimals
-          BigNumber.from(
-            utils.parseUnits(amount.toString(), erc20Decimals)
-          ).toHexString(),
-          32
-        )
-        .substr(2) + // Deposit Amount (32 bytes)
-      utils
-        .hexZeroPad(utils.hexlify((recipient.length - 2) / 2), 32)
-        .substr(2) + // len(recipientAddress) (32 bytes)
-      recipient.substr(2); // recipientAddress (?? bytes)
+
+    const [epoch, totalSupply] = await controller.globalAmpleforthEpochAndAMPLSupply();
+    const data = packXCTransferData(address, recipient, utils.parseUnits(amount.toString(), erc20Decimals), totalSupply);
 
     try {
       const currentAllowance = await erc20.allowance(
         address,
-        homeChain.erc20HandlerAddress
+        homeChain.approvalContract
       );
 
       if (Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount) {
-        if (
-          Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
-          resetAllowanceLogicFor.includes(tokenAddress)
-        ) {
-          //We need to reset the user's allowance to 0 before we give them a new allowance
-          //TODO Should we alert the user this is happening here?
-          await (
-            await erc20.approve(
-              homeChain.erc20HandlerAddress,
-              BigNumber.from(utils.parseUnits("0", erc20Decimals)),
-              {
-                gasPrice: BigNumber.from(
-                  utils.parseUnits(
-                    (homeChain.defaultGasPrice || gasPrice).toString(),
-                    9
-                  )
-                ).toString(),
-              }
-            )
-          ).wait(1);
-        }
+        // if (
+        //   Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
+        //   resetAllowanceLogicFor.includes(tokenAddress)
+        // ) {
+        //   // We need to reset the user's allowance to 0 before we give them a new allowance
+        //   //TODO Should we alert the user this is happening here?
+        //   await (
+        //     await erc20.approve(
+        //       homeChain.approvalContract,
+        //       BigNumber.from(utils.parseUnits("0", erc20Decimals)),
+        //       {
+        //         gasPrice: BigNumber.from(
+        //           utils.parseUnits(
+        //             (homeChain.defaultGasPrice || gasPrice).toString(),
+        //             9
+        //           )
+        //         ).toString(),
+        //       }
+        //     )
+        //   ).wait(1);
+        // }
         await (
           await erc20.approve(
-            homeChain.erc20HandlerAddress,
+            homeChain.approvalContract,
             BigNumber.from(utils.parseUnits(amount.toString(), erc20Decimals)),
             {
               gasPrice: BigNumber.from(
