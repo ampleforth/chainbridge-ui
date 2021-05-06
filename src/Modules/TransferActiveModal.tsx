@@ -302,7 +302,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 href={process.env.REACT_APP_SUPPORT_URL}
                 target="_blank"
               >
-                <Button variant="outline">
+                <Button className={classes.button} variant="outline">
                   Ask a question on {process.env.REACT_APP_SUPPORT_SERVICE}
                 </Button>
               </a>

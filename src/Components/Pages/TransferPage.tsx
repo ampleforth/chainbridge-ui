@@ -28,6 +28,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     root: {
       padding: constants.generalUnit * 6,
       position: "relative",
+      minHeight: '800px',
     },
     walletArea: {
       display: "flex",
@@ -83,7 +84,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       flexDirection: "row",
       alignItems: "flex-end",
       justifyContent: "space-around",
-      paddingRight: constants.generalUnit,
+      // paddingRight: constants.generalUnit,
     },
     tokenInput: {
       margin: 0,
@@ -117,7 +118,12 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     currencySelector: {
-      width: 120,
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-end",
+      margin: `${constants.generalUnit * 3}px 0`,
+      width: '100%',
       "& *": {
         cursor: "pointer",
       },
@@ -129,6 +135,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     addressInput: {},
     generalInput: {
+      width: '100%',
       "& > span": {
         marginBottom: constants.generalUnit,
       },
@@ -162,7 +169,10 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       flexDirection: "row",
       flexWrap: "wrap",
       justifyContent: "space-between",
-      marginBottom: constants.generalUnit,
+      marginTop: 2*constants.generalUnit,
+      marginBottom: 2*constants.generalUnit,
+      background: palette.additional["gray"][2],
+      padding: `${constants.generalUnit}px ${2*constants.generalUnit}px`,
       "& > *": {
         display: "block",
         width: "50%",
@@ -204,7 +214,6 @@ const TransferPage = () => {
     resetDeposit,
     bridgeFee,
   } = useChainbridge();
-
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
@@ -269,7 +278,7 @@ const TransferPage = () => {
       })
       .test("Min", "Less than minimum", (value) => {
         if (value) {
-          return parseFloat(value) > 0;
+          return parseFloat(value) >= (10 ** -(tokens[preflightDetails.token].decimals/2));
         }
         return false;
       })
@@ -360,63 +369,61 @@ const TransferPage = () => {
               value={destinationChain?.chainId}
             />
           </section>
+          <section className={classes.currencySelector}>
+            <TokenSelectInput
+              tokens={tokens}
+              name="token"
+              disabled={!destinationChain}
+              label={`Balance: `}
+              className={classes.generalInput}
+              placeholder=""
+              sync={(tokenAddress) => {
+                setPreflightDetails({
+                  ...preflightDetails,
+                  token: tokenAddress,
+                  receiver: "",
+                  tokenAmount: 0,
+                  tokenSymbol: "",
+                });
+              }}
+              options={
+                Object.keys(tokens).map((t) => ({
+                  value: t,
+                  label: (
+                    <div className={classes.tokenItem}>
+                      {tokens[t]?.imageUri && (
+                        <img
+                          src={tokens[t]?.imageUri}
+                          alt={tokens[t]?.symbol}
+                        />
+                      )}
+                      <span>{tokens[t]?.symbol || t}</span>
+                    </div>
+                  ),
+                })) || []
+              }
+            />
+          </section>
           <section className={classes.currencySection}>
-            <section>
-              <div
-                className={clsx(classes.tokenInputArea, classes.generalInput)}
-              >
-                <TokenInput
-                  classNames={{
-                    input: clsx(classes.tokenInput, classes.generalInput),
-                    button: classes.maxButton,
-                  }}
-                  tokenSelectorKey="token"
-                  tokens={tokens}
-                  disabled={
-                    !destinationChain ||
-                    !preflightDetails.token ||
-                    preflightDetails.token === ""
-                  }
-                  name="tokenAmount"
-                  label="I want to send"
-                />
-              </div>
-            </section>
-            <section className={classes.currencySelector}>
-              <TokenSelectInput
-                tokens={tokens}
-                name="token"
-                disabled={!destinationChain}
-                label={`Balance: `}
-                className={classes.generalInput}
-                placeholder=""
-                sync={(tokenAddress) => {
-                  setPreflightDetails({
-                    ...preflightDetails,
-                    token: tokenAddress,
-                    receiver: "",
-                    tokenAmount: 0,
-                    tokenSymbol: "",
-                  });
+            <div
+              className={clsx(classes.tokenInputArea, classes.generalInput)}
+            >
+              <TokenInput
+                classNames={{
+                  input: clsx(classes.tokenInput, classes.generalInput),
+                  button: classes.maxButton,
                 }}
-                options={
-                  Object.keys(tokens).map((t) => ({
-                    value: t,
-                    label: (
-                      <div className={classes.tokenItem}>
-                        {tokens[t]?.imageUri && (
-                          <img
-                            src={tokens[t]?.imageUri}
-                            alt={tokens[t]?.symbol}
-                          />
-                        )}
-                        <span>{tokens[t]?.symbol || t}</span>
-                      </div>
-                    ),
-                  })) || []
+                tokenSelectorKey="token"
+                tokens={tokens}
+                disabled={
+                  !destinationChain ||
+                  !preflightDetails.token ||
+                  preflightDetails.token === ""
                 }
+                name="tokenAmount"
+                label="I want to send"
               />
-            </section>
+            </div>
           </section>
           <section>
             <AddressInput

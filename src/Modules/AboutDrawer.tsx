@@ -4,12 +4,16 @@ import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
 
-const useStyles = makeStyles(({ constants }: ITheme) =>
+const useStyles = makeStyles(({ constants, zIndex }: ITheme) =>
   createStyles({
     root: {
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
+      zIndex: zIndex?.layer3,
+    },
+    link: {
+      color: "#ffffff",
     },
     buttons: {
       display: "flex",
@@ -37,18 +41,18 @@ const AboutDrawer: React.FC<IAboutDrawerProps> = ({
   return (
     <CustomDrawer onClose={close} open={open} className={classes.root}>
       <Typography variant="h1" component="h4">
-        What is ChainBridge?
+        What is the AMPL Bridge?
       </Typography>
       <Typography component="p" variant="h5">
-        ChainBridge is a modular multi-directional blockchain bridge to allow
-        data and value transfer between any number of blockchains. This should
-        enable users to specify a destination blockchain from their source
-        chain, and send data to that blockchain for consumption on the
-        destination chain. <br />
-        <br />
-        This could be a token that is locked on ChainA and redeemed on ChainB,
-        or an operation that is executed on a destination chain and initiated on
-        the source chain.
+        The AMPL Bridge is a n-way blockchain bridge which allows AMPL to be
+        transfer between any two connected blockchains.
+        <br /><br /><br />
+
+        This POA-bridge currently supports transfers between Ropsten, BSC testnet
+        and Meter testnet and is validated by <a href="#" className={classes.link}>Meter</a>, Relayer2 and Relayer3.
+        <br /><br /><br />
+
+        <a href="#" className={classes.link}>Learn more</a> about how AMPL works acorss muliple chains.
       </Typography>
       <section className={classes.buttons}>
         <Button onClick={() => close()} variant="outline">

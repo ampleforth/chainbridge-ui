@@ -5,6 +5,7 @@ import { Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
+import AMPLLogo from "../media/ample-logo/logo.png";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
@@ -20,7 +21,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       borderBottom: `1px solid ${palette.additional["header"][3]}`,
       color: palette.additional["header"][2],
       alignItems: "center",
-      zIndex: zIndex?.layer2,
+      zIndex: zIndex?.layer1,
     },
     left: {
       display: "flex",
@@ -35,6 +36,14 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
         maxHeight: "100%",
         maxWidth: "100%",
       },
+    },
+    logoBranding: {
+      fontFamily: 'Montserrat Alternates',
+      fontWeight: 900,
+      fontStyle: "normal",
+      letterSpacing: "0px",
+      fontSize: "1.25rem",
+      color: "black",
     },
     state: {
       display: "flex",
@@ -65,11 +74,10 @@ const AppHeader: React.FC<IAppHeader> = () => {
   return (
     <header className={clsx(classes.root)}>
       <div className={classes.left}>
-        {/* ADD LOGO HERE */}
-        {/* <div className={classes.logo}>
-        
-        </div> */}
-        <Typography variant="h4">ChainBridge Token Swap</Typography>
+        {/*<div className={classes.logo}>
+          <img src={AMPLLogo}/>
+        </div>*/}
+        <Typography variant="h4"><b className={classes.logoBranding}>AMPL</b> Bridge</Typography>
       </div>
       <section className={classes.state}>
         {!isReady ? (
