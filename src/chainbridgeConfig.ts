@@ -1,6 +1,5 @@
 import AMPLIcon from "./media/ample-logo/logo.png";
 
-
 export type TokenConfig = {
   address: string;
   name?: string;
@@ -42,7 +41,8 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       genericHandlerAddress: "0x4CbbA9ea441cae4c07cB42549F3b2372c445CDd3",
       controller: "0x7F93DE6733602f4606986389e4fbaC2010904aCE",
       approvalContract: "0xa0DF1131eFA62E487dF180Feb9ecF1cdE7aad632",
-      rpcUrl: "https://eth-ropsten.alchemyapi.io/v2/x2jT9wfMVj9S3IjBoniQXNAF14Yaktg6",
+      rpcUrl:
+        "https://eth-ropsten.alchemyapi.io/v2/x2jT9wfMVj9S3IjBoniQXNAF14Yaktg6",
       type: "Ethereum",
       blockExplorer: "https://ropsten.etherscan.io/tx",
       nativeTokenSymbol: "RETH",
@@ -53,9 +53,10 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: AMPLIcon,
           resourceId:
             "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
-        }
+        },
       ],
-    }, {
+    },
+    {
       chainId: 4,
       networkId: 97,
       name: "BSC Testnet",
@@ -74,20 +75,21 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: AMPLIcon,
           resourceId:
             "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
-        }
+        },
       ],
-    }, {
+    },
+    {
       chainId: 2,
       networkId: 101,
       name: "Meter Testnet",
-      bridgeAddress: "0xd259ED8E7ACa1f5eA16fD58a860c09Af335b8198",
+      bridgeAddress: "0xcC5A4195323CB835f22A9B7c6C5Cf6691D4419ec",
       genericHandlerAddress: "0xb145C8E7EBbD692cFC495E6a5f414DF6f72503FA",
       controller: "0x073ebB139F18d78c2671a316336bB8e1B52e60EA",
       approvalContract: "0x073ebB139F18d78c2671a316336bB8e1B52e60EA",
       rpcUrl: "https://rpctest.meter.io",
       type: "Ethereum",
       blockExplorer: "https://scan-warringstakes.meter.io/tx",
-      nativeTokenSymbol: "TMTR",
+      nativeTokenSymbol: "MTR",
       deployedBlockNumber: 1092980,
       tokens: [
         {
@@ -95,7 +97,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: AMPLIcon,
           resourceId:
             "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
-        }
+        },
       ],
     },
   ],
