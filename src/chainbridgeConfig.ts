@@ -1,5 +1,5 @@
 import AMPLIcon from "./media/ample-logo/logo.png";
-
+import AMPL_BSC_MP_Icon from "./media/ample-logo/ampl_bsc_mp.png";
 
 export type TokenConfig = {
   address: string;
@@ -36,66 +36,47 @@ export const chainbridgeConfig: ChainbridgeConfig = {
   chains: [
     {
       chainId: 1,
-      networkId: 3,
-      name: "Ropsten",
-      bridgeAddress: "0x6fC272eD9B6B947a7858DF30D7DD2D8173306EA8",
-      genericHandlerAddress: "0xBAb8402E278F45d51BB342525716611fE1090027",
-      controller: "0x7F93DE6733602f4606986389e4fbaC2010904aCE",
-      approvalContract: "0xa0DF1131eFA62E487dF180Feb9ecF1cdE7aad632",
-      rpcUrl: "https://eth-ropsten.alchemyapi.io/v2/x2jT9wfMVj9S3IjBoniQXNAF14Yaktg6",
+      networkId: 1,
+      name: "Ethereum",
+      bridgeAddress: "0xbD515E41DF155112Cc883f8981CB763a286261be",
+      genericHandlerAddress: "0x517828d2549cEC09386f89a67E92825E26740240",
+      controller: "0x1B228a749077b8e307C5856cE62Ef35d96Dca2ea",
+      approvalContract: "0x805c7Ecba41f9321bb098ec1cf31d86d9407de2F",
+      rpcUrl:
+        "https://eth-mainnet.alchemyapi.io/v2/x2jT9wfMVj9S3IjBoniQXNAF14Yaktg6",
       type: "Ethereum",
-      blockExplorer: "https://ropsten.etherscan.io/tx",
-      nativeTokenSymbol: "RETH",
-      deployedBlockNumber: 10126635,
+      blockExplorer: "https://etherscan.io/tx",
+      nativeTokenSymbol: "ETH",
+      deployedBlockNumber: 12345342,
       tokens: [
         {
-          address: "0xD0E9335817f7B7c2567b784FD55b203697177E2A",
+          address: "0xD46bA6D942050d489DBd938a2C909A5d5039A161",
           imageUri: AMPLIcon,
           resourceId:
             "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
-        }
+        },
       ],
-    }, {
+    },
+    {
       chainId: 4,
-      networkId: 97,
-      name: "BSC Testnet",
-      bridgeAddress: "0xcCeA086cbb7DA6bA5eb004fAd435F9b7712bA80e",
-      genericHandlerAddress: "0x56f03E0B73fa6Ff6704CA399CE88282EDcF9FeEA",
-      controller: "0x22881e9feb1746109227397cAe6Cd86859b9C43e",
-      approvalContract: "0x22881e9feb1746109227397cAe6Cd86859b9C43e",
-      rpcUrl: "https://data-seed-prebsc-2-s3.binance.org:8545",
+      networkId: 56,
+      name: "BSC",
+      bridgeAddress: "0x223fafbc2cA53A75CcfF5B2369128d3d1a828F36",
+      genericHandlerAddress: "0x83Fc24eB56121FA2A05e0b5170E7310738425839",
+      controller: "0x17F084dFF8a71e38521BCBD3Da871753Dc67aa81",
+      approvalContract: "0x17F084dFF8a71e38521BCBD3Da871753Dc67aa81",
+      rpcUrl: "https://bsc-dataseed.binance.org/",
       type: "Ethereum",
-      blockExplorer: "https://testnet.bscscan.io/tx",
-      nativeTokenSymbol: "TBNB",
-      deployedBlockNumber: 8356136,
+      blockExplorer: "https://bscscan.com/tx",
+      nativeTokenSymbol: "BNB",
+      deployedBlockNumber: 7028782,
       tokens: [
         {
-          address: "0x75c00CF8B6C932AaD2E20fa238a57D389aE3842d",
-          imageUri: AMPLIcon,
+          address: "0xDB021b1B247fe2F1fa57e0A87C748Cc1E321F07F",
+          imageUri: AMPL_BSC_MP_Icon,
           resourceId:
             "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
-        }
-      ],
-    }, {
-      chainId: 2,
-      networkId: 101,
-      name: "Meter Testnet",
-      bridgeAddress: "0x4E68f5f704878e69AF9d58D5616168d69f1D03e4",
-      genericHandlerAddress: "0x56f03E0B73fa6Ff6704CA399CE88282EDcF9FeEA",
-      controller: "0x073ebB139F18d78c2671a316336bB8e1B52e60EA",
-      approvalContract: "0x073ebB139F18d78c2671a316336bB8e1B52e60EA",
-      rpcUrl: "https://rpctest.meter.io",
-      type: "Ethereum",
-      blockExplorer: "https://scan-warringstakes.meter.io/tx",
-      nativeTokenSymbol: "TMTR",
-      deployedBlockNumber: 1092980,
-      tokens: [
-        {
-          address: "0xd259ED8E7ACa1f5eA16fD58a860c09Af335b8198",
-          imageUri: AMPLIcon,
-          resourceId:
-            "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
-        }
+        },
       ],
     },
   ],

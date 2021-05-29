@@ -105,7 +105,7 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
         </li>
         <li>
           <Typography variant="h5">
-            The transaction fee may be higher than expected.
+            The bridge is not run by Fragments or the Ampleforth foundation.
           </Typography>
         </li>
       </ul>

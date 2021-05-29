@@ -46,7 +46,7 @@ const AboutDrawer: React.FC<IAboutDrawerProps> = ({
       <Typography component="p" variant="h5">
         The AMPL Bridge is a n-way <a href="https://en.wikipedia.org/wiki/Proof_of_authority" className={classes.link} target="_blank">POA</a>
         &nbsp;blockchain bridge which allows AMPL to be
-        transfer between any two connected blockchains.
+        transferred between any two connected blockchains.
         <br /><br /><br />
 
         This bridge currently supports transfers between Ethereum and BSC and is validated by
