@@ -1,4 +1,4 @@
-import { useWeb3 } from "@chainsafe/web3-context";
+import { useWeb3 } from "@meterio/web3-context";
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Bridge } from "../Contracts/Bridge";
 import { BridgeFactory } from "../Contracts/BridgeFactory";
@@ -364,6 +364,8 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         homeChain.approvalContract
       );
 
+      const gasLimit = 500000;
+
       if (Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount) {
         // if (
         //   Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
@@ -397,6 +399,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
                   9
                 )
               ).toString(),
+              gasLimit,
             }
           )
         ).wait(1);
@@ -424,6 +427,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
               (homeChain.defaultGasPrice || gasPrice).toString(),
               9
             ),
+            gasLimit,
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           }
         )

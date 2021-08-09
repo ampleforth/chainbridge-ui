@@ -3,7 +3,7 @@ import React from "react";
 import clsx from "clsx";
 import { Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
-import { useWeb3 } from "@chainsafe/web3-context";
+import { useWeb3 } from "@meterio/web3-context";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 // import AMPLLogo from "../media/ample-logo/logo.png";
 

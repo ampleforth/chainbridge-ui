@@ -14,7 +14,7 @@ import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
 import clsx from "clsx";
 import TransferActiveModal from "../../Modules/TransferActiveModal";
-import { useWeb3 } from "@chainsafe/web3-context";
+import { useWeb3 } from "@meterio/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenSelectInput from "../Custom/TokenSelectInput";
 import TokenInput from "../Custom/TokenInput";

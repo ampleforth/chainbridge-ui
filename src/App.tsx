@@ -11,7 +11,7 @@ import Routes from "./Components/Routes";
 import { ampleTheme } from "./Themes/AmpleforthTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
-import { Web3Provider } from "@chainsafe/web3-context";
+import { Web3Provider } from "@meterio/web3-context";
 import { chainbridgeConfig } from "./chainbridgeConfig";
 import { utils } from "ethers";
 
@@ -71,7 +71,7 @@ const App: React.FC<{}> = () => {
             }}
             checkNetwork={false}
             gasPricePollingInterval={120}
-            gasPriceSetting="fast"
+            gasPriceSetting="recommendedBaseFee"
           >
             <ChainbridgeProvider>
               <Router>
