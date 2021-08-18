@@ -3,6 +3,7 @@ import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import React from "react";
 import { ReactNode } from "react";
 import AppHeader from "./AppHeader";
+import AppFooter from "./AppFooter";
 import { ReactComponent as GlobalSvg } from "../media/Icons/global.svg";
 import { ReactComponent as GiftSvg } from "../media/Icons/gift.svg";
 import { ROUTE_LINKS } from "../Components/Routes";
@@ -16,12 +17,12 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       minHeight: "100vh",
       display: "flex",
       flexDirection: "column",
-      justifyContent: "center",
+      // justifyContent: "center",
       paddingTop: 60,
     },
     inner: {
-      paddingTop: (constants.navItemHeight as number) * 2,
-      paddingBottom: (constants.navItemHeight as number) * 2,
+      paddingTop: (constants.navItemHeight as number) * 0.5,
+      paddingBottom: (constants.navItemHeight as number) * 0.5,
     },
     cta: {
       display: "block",
@@ -40,15 +41,18 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       maxWidth: 460,
       display: "flex",
       flexDirection: "column",
-      overflow: "hidden",
-      borderRadius: 4,
+      // overflow: "hidden",
+      borderRadius: 0,
     },
     pageArea: {
       height: "100%",
       width: "100%",
       overflow: "hidden",
-      border: `1px solid ${palette.additional["gray"][7]}`,
-      borderRadius: 4,
+      // border: `1px solid ${palette.additional["gray"][7]}`,
+      borderRadius: 0,
+      "-webkit-box-shadow": "0px -2px 25px -3px rgb(0 0 0 / 10%)",
+      "-moz-box-shadow": "0px -2px 25px -3px rgba(0, 0, 0, 0.1)",
+      "box-shadow": "0px -2px 25px -3px rgb(0 0 0 / 10%)",
     },
     navTabs: {
       // position: "absolute",
@@ -104,16 +108,12 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
       <section className={classes.inner}>
         <AppHeader />
         <section className={classes.content}>
-          <section className={classes.navTabs}>
+          {/*<section className={classes.navTabs}>
             <NavLink activeClassName="active" to={ROUTE_LINKS.Transfer}>
               <GlobalSvg />
               <Typography variant="h5">Transfer</Typography>
             </NavLink>
-            <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
-              <GiftSvg />
-              <Typography variant="h5">Wrap token</Typography>
-            </NavLink>
-          </section>
+          </section>*/}
           <div className={classes.pageArea}>{children}</div>
         </section>
 
@@ -121,6 +121,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
         {/* <a className={classes.cta} rel="noopener noreferrer" target="_blank" href="#">
         </a> */}
       </section>
+      <AppFooter />
     </section>
   );
 };

@@ -3,11 +3,13 @@ import React from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
-import { useWeb3 } from "@chainsafe/web3-context";
+import { useWeb3 } from "@meterio/web3-context";
 
-const useStyles = makeStyles(({ constants }: ITheme) =>
+const useStyles = makeStyles(({ constants, zIndex }: ITheme) =>
   createStyles({
-    root: {},
+    root: {
+      zIndex: zIndex?.layer3,
+    },
     buttons: {
       display: "flex",
       flexDirection: "row",

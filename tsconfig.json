@@ -17,7 +17,8 @@
     "sourceMap": true,
     "inlineSources": true,
     "sourceRoot": "/",
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "noImplicitAny": false
   },
   "include": ["src"]
 }
