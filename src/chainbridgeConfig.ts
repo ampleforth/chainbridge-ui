@@ -1,5 +1,5 @@
 import AMPLIcon from "./media/ample-logo/logo.png";
-import AMPL_BSC_MP_Icon from "./media/ample-logo/ampl_bsc_mp.png";
+// import AMPL_BSC_MP_Icon from "./media/ample-logo/ampl_bsc_mp.png";
 
 export type TokenConfig = {
   address: string;
@@ -73,7 +73,29 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       tokens: [
         {
           address: "0xDB021b1B247fe2F1fa57e0A87C748Cc1E321F07F",
-          imageUri: AMPL_BSC_MP_Icon,
+          imageUri: AMPLIcon,
+          resourceId:
+            "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
+        },
+      ],
+    },
+    {
+      chainId: 2,
+      networkId: 43114,
+      name: "AVAX",
+      bridgeAddress: "0xF41e7FC4eC990298d36f667B93951c9dba65224e",
+      genericHandlerAddress: "0x123455360bE78C9289B38bcb4DbA427D9a6cD440",
+      controller: "0x24232ccAf8bB87908C419aD7dDCca8cc9e74746d",
+      approvalContract: "0x24232ccAf8bB87908C419aD7dDCca8cc9e74746d",
+      rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
+      type: "Ethereum",
+      blockExplorer: "https://cchain.explorer.avax.network/tx",
+      nativeTokenSymbol: "AVAX",
+      deployedBlockNumber: 4754446,
+      tokens: [
+        {
+          address: "0x027dbcA046ca156De9622cD1e2D907d375e53aa7",
+          imageUri: AMPLIcon,
           resourceId:
             "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
         },
