@@ -92,6 +92,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       blockExplorer: "https://cchain.explorer.avax.network/tx",
       nativeTokenSymbol: "AVAX",
       deployedBlockNumber: 4754446,
+      defaultGasPrice: 20,
       tokens: [
         {
           address: "0x027dbcA046ca156De9622cD1e2D907d375e53aa7",
