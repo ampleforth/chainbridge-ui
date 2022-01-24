@@ -89,13 +89,35 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       approvalContract: "0x24232ccAf8bB87908C419aD7dDCca8cc9e74746d",
       rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
       type: "Ethereum",
-      blockExplorer: "https://cchain.explorer.avax.network/tx",
+      blockExplorer: "https://snowtrace.io/tx",
       nativeTokenSymbol: "AVAX",
       deployedBlockNumber: 4754446,
       defaultGasPrice: 20,
       tokens: [
         {
           address: "0x027dbcA046ca156De9622cD1e2D907d375e53aa7",
+          imageUri: AMPLIcon,
+          resourceId:
+            "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
+        },
+      ],
+    },
+    {
+      chainId: 3,
+      networkId: 82,
+      name: "MTR",
+      bridgeAddress: "0x3f396Af107049232Bc2804C171ecad65DBCC0323",
+      genericHandlerAddress: "0x89CA53Bf11d24D32A7aC3aDb7750868360c90590",
+      controller: "0x5353C43b3aF8E9F9c044B55Ea2c139aC977E0F19",
+      approvalContract: "0x5353C43b3aF8E9F9c044B55Ea2c139aC977E0F19",
+      rpcUrl: "https://rpc.meter.io",
+      type: "Ethereum",
+      blockExplorer: "https://scan.meter.io/tx",
+      nativeTokenSymbol: "MTR",
+      deployedBlockNumber: 14654758,
+      tokens: [
+        {
+          address: "0x1cf09D1B5Da9d9d24365D87B932A7c4bD018A419",
           imageUri: AMPLIcon,
           resourceId:
             "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
