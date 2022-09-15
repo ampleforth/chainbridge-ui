@@ -25,52 +25,57 @@ import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 interface BridgeInterface extends ethers.utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
+    "MAX_RELAYERS()": FunctionFragment;
+    "PERMIT_TYPEHASH()": FunctionFragment;
     "RELAYER_ROLE()": FunctionFragment;
-    "_chainID()": FunctionFragment;
+    "_chainId()": FunctionFragment;
     "_depositCounts(uint8)": FunctionFragment;
-    "_depositRecords(uint64,uint8)": FunctionFragment;
+    "_domainID()": FunctionFragment;
     "_expiry()": FunctionFragment;
     "_fee()": FunctionFragment;
+    "_feeHandler()": FunctionFragment;
     "_hasVotedOnProposal(uint72,bytes32,address)": FunctionFragment;
-    "_proposals(uint72,bytes32)": FunctionFragment;
     "_relayerThreshold()": FunctionFragment;
     "_resourceIDToHandlerAddress(bytes32)": FunctionFragment;
-    "_specialFee()": FunctionFragment;
-    "_specialFeeChainID()": FunctionFragment;
-    "_totalProposals()": FunctionFragment;
     "_totalRelayers()": FunctionFragment;
-    "_wtokenAddress()": FunctionFragment;
     "adminAddRelayer(address)": FunctionFragment;
-    "adminChangeFee(uint256)": FunctionFragment;
+    "adminChangeExpiry(uint256)": FunctionFragment;
+    "adminChangeFeeHandler(address)": FunctionFragment;
     "adminChangeRelayerThreshold(uint256)": FunctionFragment;
-    "adminChangeSpecialFee(uint256,uint8)": FunctionFragment;
     "adminPauseTransfers()": FunctionFragment;
     "adminRemoveRelayer(address)": FunctionFragment;
     "adminSetBurnable(address,address)": FunctionFragment;
+    "adminSetDepositNonce(uint8,uint64)": FunctionFragment;
+    "adminSetDomainId(uint8)": FunctionFragment;
+    "adminSetForwarder(address,bool)": FunctionFragment;
     "adminSetGenericResource(address,bytes32,address,bytes4,uint256,bytes4)": FunctionFragment;
+    "adminSetNative(bytes32,address,bool)": FunctionFragment;
+    "adminSetNativeResource(address)": FunctionFragment;
     "adminSetResource(address,bytes32,address)": FunctionFragment;
     "adminUnpauseTransfers()": FunctionFragment;
-    "adminUpdateBridgeAddress(address,address)": FunctionFragment;
-    "adminWithdraw(address,address,address,uint256)": FunctionFragment;
+    "adminWithdraw(address,bytes)": FunctionFragment;
+    "adminWithdrawETH(address,bytes)": FunctionFragment;
+    "calculateFee(uint8,bytes32,bytes,bytes)": FunctionFragment;
     "cancelProposal(uint8,uint64,bytes32)": FunctionFragment;
-    "deposit(uint8,bytes32,bytes)": FunctionFragment;
-    "depositETH(uint8,bytes32,bytes)": FunctionFragment;
-    "executeProposal(uint8,uint64,bytes,bytes32)": FunctionFragment;
-    "getFee(uint8)": FunctionFragment;
-    "getFees()": FunctionFragment;
-    "getProposal(uint8,uint64,bytes32)": FunctionFragment;
+    "checkSignature(uint8,uint64,bytes32,bytes,bytes)": FunctionFragment;
+    "deposit(uint8,bytes32,bytes,bytes)": FunctionFragment;
+    "executeProposal(uint8,uint64,bytes,bytes32,bool)": FunctionFragment;
+    "getProposal(uint8,uint64,bytes32,bytes)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "getRoleMember(bytes32,uint256)": FunctionFragment;
     "getRoleMemberCount(bytes32)": FunctionFragment;
+    "getRoleMemberIndex(bytes32,address)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "isRelayer(address)": FunctionFragment;
+    "isValidForwarder(address)": FunctionFragment;
     "paused()": FunctionFragment;
     "renounceAdmin(address)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "transferFunds(address[],uint256[])": FunctionFragment;
-    "voteProposal(uint8,uint64,bytes32,bytes32)": FunctionFragment;
+    "voteProposal(uint8,uint64,bytes32,bytes)": FunctionFragment;
+    "voteProposals(uint8,uint64,bytes32,bytes,bytes[])": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -78,27 +83,32 @@ interface BridgeInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "MAX_RELAYERS",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "PERMIT_TYPEHASH",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "RELAYER_ROLE",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "_chainID", values?: undefined): string;
+  encodeFunctionData(functionFragment: "_chainId", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "_depositCounts",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "_depositRecords",
-    values: [BigNumberish, BigNumberish]
-  ): string;
+  encodeFunctionData(functionFragment: "_domainID", values?: undefined): string;
   encodeFunctionData(functionFragment: "_expiry", values?: undefined): string;
   encodeFunctionData(functionFragment: "_fee", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "_hasVotedOnProposal",
-    values: [BigNumberish, BytesLike, string]
+    functionFragment: "_feeHandler",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "_proposals",
-    values: [BigNumberish, BytesLike]
+    functionFragment: "_hasVotedOnProposal",
+    values: [BigNumberish, BytesLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: "_relayerThreshold",
@@ -109,23 +119,7 @@ interface BridgeInterface extends ethers.utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "_specialFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "_specialFeeChainID",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "_totalProposals",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "_totalRelayers",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "_wtokenAddress",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -133,16 +127,16 @@ interface BridgeInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "adminChangeFee",
+    functionFragment: "adminChangeExpiry",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "adminChangeFeeHandler",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "adminChangeRelayerThreshold",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "adminChangeSpecialFee",
-    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "adminPauseTransfers",
@@ -157,8 +151,28 @@ interface BridgeInterface extends ethers.utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "adminSetDepositNonce",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "adminSetDomainId",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "adminSetForwarder",
+    values: [string, boolean]
+  ): string;
+  encodeFunctionData(
     functionFragment: "adminSetGenericResource",
     values: [string, BytesLike, string, BytesLike, BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "adminSetNative",
+    values: [BytesLike, string, boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "adminSetNativeResource",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "adminSetResource",
@@ -169,37 +183,36 @@ interface BridgeInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "adminUpdateBridgeAddress",
-    values: [string, string]
+    functionFragment: "adminWithdraw",
+    values: [string, BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "adminWithdraw",
-    values: [string, string, string, BigNumberish]
+    functionFragment: "adminWithdrawETH",
+    values: [string, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "calculateFee",
+    values: [BigNumberish, BytesLike, BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "cancelProposal",
     values: [BigNumberish, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "deposit",
-    values: [BigNumberish, BytesLike, BytesLike]
+    functionFragment: "checkSignature",
+    values: [BigNumberish, BigNumberish, BytesLike, BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "depositETH",
-    values: [BigNumberish, BytesLike, BytesLike]
+    functionFragment: "deposit",
+    values: [BigNumberish, BytesLike, BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "executeProposal",
-    values: [BigNumberish, BigNumberish, BytesLike, BytesLike]
+    values: [BigNumberish, BigNumberish, BytesLike, BytesLike, boolean]
   ): string;
-  encodeFunctionData(
-    functionFragment: "getFee",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "getFees", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getProposal",
-    values: [BigNumberish, BigNumberish, BytesLike]
+    values: [BigNumberish, BigNumberish, BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
@@ -214,6 +227,10 @@ interface BridgeInterface extends ethers.utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "getRoleMemberIndex",
+    values: [BytesLike, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "grantRole",
     values: [BytesLike, string]
   ): string;
@@ -222,6 +239,10 @@ interface BridgeInterface extends ethers.utils.Interface {
     values: [BytesLike, string]
   ): string;
   encodeFunctionData(functionFragment: "isRelayer", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "isValidForwarder",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceAdmin",
@@ -243,31 +264,43 @@ interface BridgeInterface extends ethers.utils.Interface {
     functionFragment: "voteProposal",
     values: [BigNumberish, BigNumberish, BytesLike, BytesLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "voteProposals",
+    values: [BigNumberish, BigNumberish, BytesLike, BytesLike, BytesLike[]]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "MAX_RELAYERS",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "PERMIT_TYPEHASH",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "RELAYER_ROLE",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "_chainID", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "_chainId", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "_depositCounts",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "_depositRecords",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "_domainID", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "_expiry", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "_fee", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "_feeHandler",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "_hasVotedOnProposal",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "_proposals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "_relayerThreshold",
     data: BytesLike
@@ -277,23 +310,7 @@ interface BridgeInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "_specialFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "_specialFeeChainID",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "_totalProposals",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "_totalRelayers",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "_wtokenAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -301,15 +318,15 @@ interface BridgeInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "adminChangeFee",
+    functionFragment: "adminChangeExpiry",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "adminChangeFeeHandler",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "adminChangeRelayerThreshold",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "adminChangeSpecialFee",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -325,7 +342,27 @@ interface BridgeInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "adminSetDepositNonce",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "adminSetDomainId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "adminSetForwarder",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "adminSetGenericResource",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "adminSetNative",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "adminSetNativeResource",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -337,25 +374,30 @@ interface BridgeInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "adminUpdateBridgeAddress",
+    functionFragment: "adminWithdraw",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "adminWithdraw",
+    functionFragment: "adminWithdrawETH",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "calculateFee",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "cancelProposal",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "checkSignature",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "depositETH", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "executeProposal",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "getFee", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getFees", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getProposal",
     data: BytesLike
@@ -372,9 +414,17 @@ interface BridgeInterface extends ethers.utils.Interface {
     functionFragment: "getRoleMemberCount",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRoleMemberIndex",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isRelayer", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isValidForwarder",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceAdmin",
@@ -393,29 +443,35 @@ interface BridgeInterface extends ethers.utils.Interface {
     functionFragment: "voteProposal",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "voteProposals",
+    data: BytesLike
+  ): Result;
 
   events: {
-    "Deposit(uint8,bytes32,uint64)": EventFragment;
+    "Deposit(uint8,bytes32,uint64,address,bytes,bytes)": EventFragment;
+    "FailedHandlerExecution(bytes)": EventFragment;
+    "FeeHandlerChanged(address)": EventFragment;
     "Paused(address)": EventFragment;
-    "ProposalEvent(uint8,uint64,uint8,bytes32,bytes32)": EventFragment;
+    "ProposalEvent(uint8,uint64,uint8,bytes32)": EventFragment;
     "ProposalVote(uint8,uint64,uint8,bytes32)": EventFragment;
     "RelayerAdded(address)": EventFragment;
     "RelayerRemoved(address)": EventFragment;
     "RelayerThresholdChanged(uint256)": EventFragment;
-    "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
     "Unpaused(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Deposit"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "FailedHandlerExecution"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "FeeHandlerChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalEvent"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalVote"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RelayerAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RelayerRemoved"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RelayerThresholdChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
@@ -469,13 +525,21 @@ export class Bridge extends Contract {
 
     "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<[string]>;
 
+    MAX_RELAYERS(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MAX_RELAYERS()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<[string]>;
+
+    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<[string]>;
+
     RELAYER_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     "RELAYER_ROLE()"(overrides?: CallOverrides): Promise<[string]>;
 
-    _chainID(overrides?: CallOverrides): Promise<[number]>;
+    _chainId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "_chainID()"(overrides?: CallOverrides): Promise<[number]>;
+    "_chainId()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     _depositCounts(
       arg0: BigNumberish,
@@ -487,69 +551,39 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    _depositRecords(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    _domainID(overrides?: CallOverrides): Promise<[number]>;
 
-    "_depositRecords(uint64,uint8)"(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    "_domainID()"(overrides?: CallOverrides): Promise<[number]>;
 
-    _expiry(overrides?: CallOverrides): Promise<[BigNumber]>;
+    _expiry(overrides?: CallOverrides): Promise<[number]>;
 
-    "_expiry()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+    "_expiry()"(overrides?: CallOverrides): Promise<[number]>;
 
     _fee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "_fee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    _feeHandler(overrides?: CallOverrides): Promise<[string]>;
+
+    "_feeHandler()"(overrides?: CallOverrides): Promise<[string]>;
+
     _hasVotedOnProposal(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      arg2: string,
+      destNonce: BigNumberish,
+      dataHash: BytesLike,
+      relayer: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     "_hasVotedOnProposal(uint72,bytes32,address)"(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      arg2: string,
+      destNonce: BigNumberish,
+      dataHash: BytesLike,
+      relayer: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    _proposals(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, number, BigNumber] & {
-        _resourceID: string;
-        _dataHash: string;
-        _status: number;
-        _proposedBlock: BigNumber;
-      }
-    >;
+    _relayerThreshold(overrides?: CallOverrides): Promise<[number]>;
 
-    "_proposals(uint72,bytes32)"(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, number, BigNumber] & {
-        _resourceID: string;
-        _dataHash: string;
-        _status: number;
-        _proposedBlock: BigNumber;
-      }
-    >;
-
-    _relayerThreshold(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "_relayerThreshold()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+    "_relayerThreshold()"(overrides?: CallOverrides): Promise<[number]>;
 
     _resourceIDToHandlerAddress(
       arg0: BytesLike,
@@ -561,25 +595,9 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    _specialFee(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "_specialFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    _specialFeeChainID(overrides?: CallOverrides): Promise<[number]>;
-
-    "_specialFeeChainID()"(overrides?: CallOverrides): Promise<[number]>;
-
-    _totalProposals(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "_totalProposals()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     _totalRelayers(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "_totalRelayers()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    _wtokenAddress(overrides?: CallOverrides): Promise<[string]>;
-
-    "_wtokenAddress()"(overrides?: CallOverrides): Promise<[string]>;
 
     adminAddRelayer(
       relayerAddress: string,
@@ -591,13 +609,23 @@ export class Bridge extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    adminChangeFee(
-      newFee: BigNumberish,
+    adminChangeExpiry(
+      expiry: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "adminChangeFee(uint256)"(
-      newFee: BigNumberish,
+    "adminChangeExpiry(uint256)"(
+      expiry: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    adminChangeFeeHandler(
+      newFeeHandler: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "adminChangeFeeHandler(address)"(
+      newFeeHandler: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -608,18 +636,6 @@ export class Bridge extends Contract {
 
     "adminChangeRelayerThreshold(uint256)"(
       newThreshold: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    adminChangeSpecialFee(
-      newFee: BigNumberish,
-      chainID: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "adminChangeSpecialFee(uint256,uint8)"(
-      newFee: BigNumberish,
-      chainID: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -651,6 +667,40 @@ export class Bridge extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    adminSetDepositNonce(
+      domainID: BigNumberish,
+      nonce: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "adminSetDepositNonce(uint8,uint64)"(
+      domainID: BigNumberish,
+      nonce: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    adminSetDomainId(
+      domainID: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "adminSetDomainId(uint8)"(
+      domainID: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    adminSetForwarder(
+      forwarder: string,
+      valid: boolean,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "adminSetForwarder(address,bool)"(
+      forwarder: string,
+      valid: boolean,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     adminSetGenericResource(
       handlerAddress: string,
       resourceID: BytesLike,
@@ -668,6 +718,30 @@ export class Bridge extends Contract {
       depositFunctionSig: BytesLike,
       depositFunctionDepositerOffset: BigNumberish,
       executeFunctionSig: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    adminSetNative(
+      resourceID: BytesLike,
+      nativeAddress: string,
+      isNative: boolean,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "adminSetNative(bytes32,address,bool)"(
+      resourceID: BytesLike,
+      nativeAddress: string,
+      isNative: boolean,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    adminSetNativeResource(
+      handlerAddress: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "adminSetNativeResource(address)"(
+      handlerAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -691,140 +765,142 @@ export class Bridge extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    adminUpdateBridgeAddress(
-      handlerAddress: string,
-      newBridgeAddress: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "adminUpdateBridgeAddress(address,address)"(
-      handlerAddress: string,
-      newBridgeAddress: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
     adminWithdraw(
       handlerAddress: string,
-      tokenAddress: string,
-      recipient: string,
-      amountOrTokenID: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "adminWithdraw(address,address,address,uint256)"(
+    "adminWithdraw(address,bytes)"(
       handlerAddress: string,
-      tokenAddress: string,
-      recipient: string,
-      amountOrTokenID: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    adminWithdrawETH(
+      handlerAddress: string,
+      data: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "adminWithdrawETH(address,bytes)"(
+      handlerAddress: string,
+      data: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    calculateFee(
+      destinationDomainID: BigNumberish,
+      resourceID: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "calculateFee(uint8,bytes32,bytes,bytes)"(
+      destinationDomainID: BigNumberish,
+      resourceID: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     cancelProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       dataHash: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "cancelProposal(uint8,uint64,bytes32)"(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       dataHash: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    checkSignature(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "checkSignature(uint8,uint64,bytes32,bytes,bytes)"(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     deposit(
-      destinationChainID: BigNumberish,
+      destinationDomainID: BigNumberish,
       resourceID: BytesLike,
-      data: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
-    "deposit(uint8,bytes32,bytes)"(
-      destinationChainID: BigNumberish,
+    "deposit(uint8,bytes32,bytes,bytes)"(
+      destinationDomainID: BigNumberish,
       resourceID: BytesLike,
-      data: BytesLike,
-      overrides?: PayableOverrides
-    ): Promise<ContractTransaction>;
-
-    depositETH(
-      destinationChainID: BigNumberish,
-      resourceID: BytesLike,
-      data: BytesLike,
-      overrides?: PayableOverrides
-    ): Promise<ContractTransaction>;
-
-    "depositETH(uint8,bytes32,bytes)"(
-      destinationChainID: BigNumberish,
-      resourceID: BytesLike,
-      data: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     executeProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       data: BytesLike,
       resourceID: BytesLike,
+      revertOnFail: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "executeProposal(uint8,uint64,bytes,bytes32)"(
-      chainID: BigNumberish,
+    "executeProposal(uint8,uint64,bytes,bytes32,bool)"(
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       data: BytesLike,
       resourceID: BytesLike,
+      revertOnFail: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
-
-    getFee(
-      destinationChainID: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "getFee(uint8)"(
-      destinationChainID: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getFees(overrides?: CallOverrides): Promise<[BigNumber, BigNumber, number]>;
-
-    "getFees()"(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber, number]>;
 
     getProposal(
-      originChainID: BigNumberish,
+      originDomainID: BigNumberish,
       depositNonce: BigNumberish,
-      dataHash: BytesLike,
+      resourceID: BytesLike,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<
       [
-        [string, string, string[], string[], number, BigNumber] & {
-          _resourceID: string;
-          _dataHash: string;
-          _yesVotes: string[];
-          _noVotes: string[];
+        [number, BigNumber, number, number] & {
           _status: number;
-          _proposedBlock: BigNumber;
+          _yesVotes: BigNumber;
+          _yesVotesTotal: number;
+          _proposedBlock: number;
         }
       ]
     >;
 
-    "getProposal(uint8,uint64,bytes32)"(
-      originChainID: BigNumberish,
+    "getProposal(uint8,uint64,bytes32,bytes)"(
+      originDomainID: BigNumberish,
       depositNonce: BigNumberish,
-      dataHash: BytesLike,
+      resourceID: BytesLike,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<
       [
-        [string, string, string[], string[], number, BigNumber] & {
-          _resourceID: string;
-          _dataHash: string;
-          _yesVotes: string[];
-          _noVotes: string[];
+        [number, BigNumber, number, number] & {
           _status: number;
-          _proposedBlock: BigNumber;
+          _yesVotes: BigNumber;
+          _yesVotesTotal: number;
+          _proposedBlock: number;
         }
       ]
     >;
@@ -858,6 +934,18 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    getRoleMemberIndex(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "getRoleMemberIndex(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     grantRole(
       role: BytesLike,
       account: string,
@@ -886,6 +974,16 @@ export class Bridge extends Contract {
 
     "isRelayer(address)"(
       relayer: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isValidForwarder(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isValidForwarder(address)"(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
@@ -940,18 +1038,36 @@ export class Bridge extends Contract {
     ): Promise<ContractTransaction>;
 
     voteProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       resourceID: BytesLike,
-      dataHash: BytesLike,
+      data: BytesLike,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "voteProposal(uint8,uint64,bytes32,bytes32)"(
-      chainID: BigNumberish,
+    "voteProposal(uint8,uint64,bytes32,bytes)"(
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       resourceID: BytesLike,
-      dataHash: BytesLike,
+      data: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    voteProposals(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signatures: BytesLike[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "voteProposals(uint8,uint64,bytes32,bytes,bytes[])"(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signatures: BytesLike[],
       overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
@@ -960,13 +1076,21 @@ export class Bridge extends Contract {
 
   "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<string>;
 
+  MAX_RELAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "MAX_RELAYERS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
+
+  "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
+
   RELAYER_ROLE(overrides?: CallOverrides): Promise<string>;
 
   "RELAYER_ROLE()"(overrides?: CallOverrides): Promise<string>;
 
-  _chainID(overrides?: CallOverrides): Promise<number>;
+  _chainId(overrides?: CallOverrides): Promise<BigNumber>;
 
-  "_chainID()"(overrides?: CallOverrides): Promise<number>;
+  "_chainId()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   _depositCounts(
     arg0: BigNumberish,
@@ -978,69 +1102,39 @@ export class Bridge extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  _depositRecords(
-    arg0: BigNumberish,
-    arg1: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  _domainID(overrides?: CallOverrides): Promise<number>;
 
-  "_depositRecords(uint64,uint8)"(
-    arg0: BigNumberish,
-    arg1: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  "_domainID()"(overrides?: CallOverrides): Promise<number>;
 
-  _expiry(overrides?: CallOverrides): Promise<BigNumber>;
+  _expiry(overrides?: CallOverrides): Promise<number>;
 
-  "_expiry()"(overrides?: CallOverrides): Promise<BigNumber>;
+  "_expiry()"(overrides?: CallOverrides): Promise<number>;
 
   _fee(overrides?: CallOverrides): Promise<BigNumber>;
 
   "_fee()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+  _feeHandler(overrides?: CallOverrides): Promise<string>;
+
+  "_feeHandler()"(overrides?: CallOverrides): Promise<string>;
+
   _hasVotedOnProposal(
-    arg0: BigNumberish,
-    arg1: BytesLike,
-    arg2: string,
+    destNonce: BigNumberish,
+    dataHash: BytesLike,
+    relayer: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   "_hasVotedOnProposal(uint72,bytes32,address)"(
-    arg0: BigNumberish,
-    arg1: BytesLike,
-    arg2: string,
+    destNonce: BigNumberish,
+    dataHash: BytesLike,
+    relayer: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  _proposals(
-    arg0: BigNumberish,
-    arg1: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, string, number, BigNumber] & {
-      _resourceID: string;
-      _dataHash: string;
-      _status: number;
-      _proposedBlock: BigNumber;
-    }
-  >;
+  _relayerThreshold(overrides?: CallOverrides): Promise<number>;
 
-  "_proposals(uint72,bytes32)"(
-    arg0: BigNumberish,
-    arg1: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, string, number, BigNumber] & {
-      _resourceID: string;
-      _dataHash: string;
-      _status: number;
-      _proposedBlock: BigNumber;
-    }
-  >;
-
-  _relayerThreshold(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "_relayerThreshold()"(overrides?: CallOverrides): Promise<BigNumber>;
+  "_relayerThreshold()"(overrides?: CallOverrides): Promise<number>;
 
   _resourceIDToHandlerAddress(
     arg0: BytesLike,
@@ -1052,25 +1146,9 @@ export class Bridge extends Contract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  _specialFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "_specialFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  _specialFeeChainID(overrides?: CallOverrides): Promise<number>;
-
-  "_specialFeeChainID()"(overrides?: CallOverrides): Promise<number>;
-
-  _totalProposals(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "_totalProposals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   _totalRelayers(overrides?: CallOverrides): Promise<BigNumber>;
 
   "_totalRelayers()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  _wtokenAddress(overrides?: CallOverrides): Promise<string>;
-
-  "_wtokenAddress()"(overrides?: CallOverrides): Promise<string>;
 
   adminAddRelayer(
     relayerAddress: string,
@@ -1082,13 +1160,23 @@ export class Bridge extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  adminChangeFee(
-    newFee: BigNumberish,
+  adminChangeExpiry(
+    expiry: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "adminChangeFee(uint256)"(
-    newFee: BigNumberish,
+  "adminChangeExpiry(uint256)"(
+    expiry: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  adminChangeFeeHandler(
+    newFeeHandler: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "adminChangeFeeHandler(address)"(
+    newFeeHandler: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1099,18 +1187,6 @@ export class Bridge extends Contract {
 
   "adminChangeRelayerThreshold(uint256)"(
     newThreshold: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  adminChangeSpecialFee(
-    newFee: BigNumberish,
-    chainID: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "adminChangeSpecialFee(uint256,uint8)"(
-    newFee: BigNumberish,
-    chainID: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1140,6 +1216,40 @@ export class Bridge extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  adminSetDepositNonce(
+    domainID: BigNumberish,
+    nonce: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "adminSetDepositNonce(uint8,uint64)"(
+    domainID: BigNumberish,
+    nonce: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  adminSetDomainId(
+    domainID: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "adminSetDomainId(uint8)"(
+    domainID: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  adminSetForwarder(
+    forwarder: string,
+    valid: boolean,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "adminSetForwarder(address,bool)"(
+    forwarder: string,
+    valid: boolean,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   adminSetGenericResource(
     handlerAddress: string,
     resourceID: BytesLike,
@@ -1157,6 +1267,30 @@ export class Bridge extends Contract {
     depositFunctionSig: BytesLike,
     depositFunctionDepositerOffset: BigNumberish,
     executeFunctionSig: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  adminSetNative(
+    resourceID: BytesLike,
+    nativeAddress: string,
+    isNative: boolean,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "adminSetNative(bytes32,address,bool)"(
+    resourceID: BytesLike,
+    nativeAddress: string,
+    isNative: boolean,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  adminSetNativeResource(
+    handlerAddress: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "adminSetNativeResource(address)"(
+    handlerAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1180,137 +1314,139 @@ export class Bridge extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  adminUpdateBridgeAddress(
-    handlerAddress: string,
-    newBridgeAddress: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "adminUpdateBridgeAddress(address,address)"(
-    handlerAddress: string,
-    newBridgeAddress: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
   adminWithdraw(
     handlerAddress: string,
-    tokenAddress: string,
-    recipient: string,
-    amountOrTokenID: BigNumberish,
+    data: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "adminWithdraw(address,address,address,uint256)"(
+  "adminWithdraw(address,bytes)"(
     handlerAddress: string,
-    tokenAddress: string,
-    recipient: string,
-    amountOrTokenID: BigNumberish,
+    data: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
+
+  adminWithdrawETH(
+    handlerAddress: string,
+    data: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "adminWithdrawETH(address,bytes)"(
+    handlerAddress: string,
+    data: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  calculateFee(
+    destinationDomainID: BigNumberish,
+    resourceID: BytesLike,
+    depositData: BytesLike,
+    feeData: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "calculateFee(uint8,bytes32,bytes,bytes)"(
+    destinationDomainID: BigNumberish,
+    resourceID: BytesLike,
+    depositData: BytesLike,
+    feeData: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   cancelProposal(
-    chainID: BigNumberish,
+    domainID: BigNumberish,
     depositNonce: BigNumberish,
     dataHash: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "cancelProposal(uint8,uint64,bytes32)"(
-    chainID: BigNumberish,
+    domainID: BigNumberish,
     depositNonce: BigNumberish,
     dataHash: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  checkSignature(
+    domainID: BigNumberish,
+    depositNonce: BigNumberish,
+    resourceID: BytesLike,
+    data: BytesLike,
+    signature: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "checkSignature(uint8,uint64,bytes32,bytes,bytes)"(
+    domainID: BigNumberish,
+    depositNonce: BigNumberish,
+    resourceID: BytesLike,
+    data: BytesLike,
+    signature: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   deposit(
-    destinationChainID: BigNumberish,
+    destinationDomainID: BigNumberish,
     resourceID: BytesLike,
-    data: BytesLike,
+    depositData: BytesLike,
+    feeData: BytesLike,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
-  "deposit(uint8,bytes32,bytes)"(
-    destinationChainID: BigNumberish,
+  "deposit(uint8,bytes32,bytes,bytes)"(
+    destinationDomainID: BigNumberish,
     resourceID: BytesLike,
-    data: BytesLike,
-    overrides?: PayableOverrides
-  ): Promise<ContractTransaction>;
-
-  depositETH(
-    destinationChainID: BigNumberish,
-    resourceID: BytesLike,
-    data: BytesLike,
-    overrides?: PayableOverrides
-  ): Promise<ContractTransaction>;
-
-  "depositETH(uint8,bytes32,bytes)"(
-    destinationChainID: BigNumberish,
-    resourceID: BytesLike,
-    data: BytesLike,
+    depositData: BytesLike,
+    feeData: BytesLike,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   executeProposal(
-    chainID: BigNumberish,
+    domainID: BigNumberish,
     depositNonce: BigNumberish,
     data: BytesLike,
     resourceID: BytesLike,
+    revertOnFail: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "executeProposal(uint8,uint64,bytes,bytes32)"(
-    chainID: BigNumberish,
+  "executeProposal(uint8,uint64,bytes,bytes32,bool)"(
+    domainID: BigNumberish,
     depositNonce: BigNumberish,
     data: BytesLike,
     resourceID: BytesLike,
+    revertOnFail: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
-
-  getFee(
-    destinationChainID: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "getFee(uint8)"(
-    destinationChainID: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getFees(overrides?: CallOverrides): Promise<[BigNumber, BigNumber, number]>;
-
-  "getFees()"(
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber, number]>;
 
   getProposal(
-    originChainID: BigNumberish,
+    originDomainID: BigNumberish,
     depositNonce: BigNumberish,
-    dataHash: BytesLike,
+    resourceID: BytesLike,
+    data: BytesLike,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, string[], string[], number, BigNumber] & {
-      _resourceID: string;
-      _dataHash: string;
-      _yesVotes: string[];
-      _noVotes: string[];
+    [number, BigNumber, number, number] & {
       _status: number;
-      _proposedBlock: BigNumber;
+      _yesVotes: BigNumber;
+      _yesVotesTotal: number;
+      _proposedBlock: number;
     }
   >;
 
-  "getProposal(uint8,uint64,bytes32)"(
-    originChainID: BigNumberish,
+  "getProposal(uint8,uint64,bytes32,bytes)"(
+    originDomainID: BigNumberish,
     depositNonce: BigNumberish,
-    dataHash: BytesLike,
+    resourceID: BytesLike,
+    data: BytesLike,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, string[], string[], number, BigNumber] & {
-      _resourceID: string;
-      _dataHash: string;
-      _yesVotes: string[];
-      _noVotes: string[];
+    [number, BigNumber, number, number] & {
       _status: number;
-      _proposedBlock: BigNumber;
+      _yesVotes: BigNumber;
+      _yesVotesTotal: number;
+      _proposedBlock: number;
     }
   >;
 
@@ -1343,6 +1479,18 @@ export class Bridge extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  getRoleMemberIndex(
+    role: BytesLike,
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "getRoleMemberIndex(bytes32,address)"(
+    role: BytesLike,
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   grantRole(
     role: BytesLike,
     account: string,
@@ -1371,6 +1519,13 @@ export class Bridge extends Contract {
 
   "isRelayer(address)"(
     relayer: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  isValidForwarder(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
+  "isValidForwarder(address)"(
+    arg0: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -1425,18 +1580,36 @@ export class Bridge extends Contract {
   ): Promise<ContractTransaction>;
 
   voteProposal(
-    chainID: BigNumberish,
+    domainID: BigNumberish,
     depositNonce: BigNumberish,
     resourceID: BytesLike,
-    dataHash: BytesLike,
+    data: BytesLike,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "voteProposal(uint8,uint64,bytes32,bytes32)"(
-    chainID: BigNumberish,
+  "voteProposal(uint8,uint64,bytes32,bytes)"(
+    domainID: BigNumberish,
     depositNonce: BigNumberish,
     resourceID: BytesLike,
-    dataHash: BytesLike,
+    data: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  voteProposals(
+    domainID: BigNumberish,
+    depositNonce: BigNumberish,
+    resourceID: BytesLike,
+    data: BytesLike,
+    signatures: BytesLike[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "voteProposals(uint8,uint64,bytes32,bytes,bytes[])"(
+    domainID: BigNumberish,
+    depositNonce: BigNumberish,
+    resourceID: BytesLike,
+    data: BytesLike,
+    signatures: BytesLike[],
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1445,13 +1618,21 @@ export class Bridge extends Contract {
 
     "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<string>;
 
+    MAX_RELAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_RELAYERS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
+
+    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
+
     RELAYER_ROLE(overrides?: CallOverrides): Promise<string>;
 
     "RELAYER_ROLE()"(overrides?: CallOverrides): Promise<string>;
 
-    _chainID(overrides?: CallOverrides): Promise<number>;
+    _chainId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "_chainID()"(overrides?: CallOverrides): Promise<number>;
+    "_chainId()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     _depositCounts(
       arg0: BigNumberish,
@@ -1463,69 +1644,39 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    _depositRecords(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    _domainID(overrides?: CallOverrides): Promise<number>;
 
-    "_depositRecords(uint64,uint8)"(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    "_domainID()"(overrides?: CallOverrides): Promise<number>;
 
-    _expiry(overrides?: CallOverrides): Promise<BigNumber>;
+    _expiry(overrides?: CallOverrides): Promise<number>;
 
-    "_expiry()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "_expiry()"(overrides?: CallOverrides): Promise<number>;
 
     _fee(overrides?: CallOverrides): Promise<BigNumber>;
 
     "_fee()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    _feeHandler(overrides?: CallOverrides): Promise<string>;
+
+    "_feeHandler()"(overrides?: CallOverrides): Promise<string>;
+
     _hasVotedOnProposal(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      arg2: string,
+      destNonce: BigNumberish,
+      dataHash: BytesLike,
+      relayer: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     "_hasVotedOnProposal(uint72,bytes32,address)"(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      arg2: string,
+      destNonce: BigNumberish,
+      dataHash: BytesLike,
+      relayer: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    _proposals(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, number, BigNumber] & {
-        _resourceID: string;
-        _dataHash: string;
-        _status: number;
-        _proposedBlock: BigNumber;
-      }
-    >;
+    _relayerThreshold(overrides?: CallOverrides): Promise<number>;
 
-    "_proposals(uint72,bytes32)"(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, number, BigNumber] & {
-        _resourceID: string;
-        _dataHash: string;
-        _status: number;
-        _proposedBlock: BigNumber;
-      }
-    >;
-
-    _relayerThreshold(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "_relayerThreshold()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "_relayerThreshold()"(overrides?: CallOverrides): Promise<number>;
 
     _resourceIDToHandlerAddress(
       arg0: BytesLike,
@@ -1537,25 +1688,9 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    _specialFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "_specialFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _specialFeeChainID(overrides?: CallOverrides): Promise<number>;
-
-    "_specialFeeChainID()"(overrides?: CallOverrides): Promise<number>;
-
-    _totalProposals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "_totalProposals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     _totalRelayers(overrides?: CallOverrides): Promise<BigNumber>;
 
     "_totalRelayers()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _wtokenAddress(overrides?: CallOverrides): Promise<string>;
-
-    "_wtokenAddress()"(overrides?: CallOverrides): Promise<string>;
 
     adminAddRelayer(
       relayerAddress: string,
@@ -1567,13 +1702,23 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    adminChangeFee(
-      newFee: BigNumberish,
+    adminChangeExpiry(
+      expiry: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "adminChangeFee(uint256)"(
-      newFee: BigNumberish,
+    "adminChangeExpiry(uint256)"(
+      expiry: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    adminChangeFeeHandler(
+      newFeeHandler: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "adminChangeFeeHandler(address)"(
+      newFeeHandler: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1584,18 +1729,6 @@ export class Bridge extends Contract {
 
     "adminChangeRelayerThreshold(uint256)"(
       newThreshold: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    adminChangeSpecialFee(
-      newFee: BigNumberish,
-      chainID: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "adminChangeSpecialFee(uint256,uint8)"(
-      newFee: BigNumberish,
-      chainID: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1625,6 +1758,40 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    adminSetDepositNonce(
+      domainID: BigNumberish,
+      nonce: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "adminSetDepositNonce(uint8,uint64)"(
+      domainID: BigNumberish,
+      nonce: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    adminSetDomainId(
+      domainID: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "adminSetDomainId(uint8)"(
+      domainID: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    adminSetForwarder(
+      forwarder: string,
+      valid: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "adminSetForwarder(address,bool)"(
+      forwarder: string,
+      valid: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     adminSetGenericResource(
       handlerAddress: string,
       resourceID: BytesLike,
@@ -1642,6 +1809,30 @@ export class Bridge extends Contract {
       depositFunctionSig: BytesLike,
       depositFunctionDepositerOffset: BigNumberish,
       executeFunctionSig: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    adminSetNative(
+      resourceID: BytesLike,
+      nativeAddress: string,
+      isNative: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "adminSetNative(bytes32,address,bool)"(
+      resourceID: BytesLike,
+      nativeAddress: string,
+      isNative: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    adminSetNativeResource(
+      handlerAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "adminSetNativeResource(address)"(
+      handlerAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1663,137 +1854,139 @@ export class Bridge extends Contract {
 
     "adminUnpauseTransfers()"(overrides?: CallOverrides): Promise<void>;
 
-    adminUpdateBridgeAddress(
-      handlerAddress: string,
-      newBridgeAddress: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "adminUpdateBridgeAddress(address,address)"(
-      handlerAddress: string,
-      newBridgeAddress: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     adminWithdraw(
       handlerAddress: string,
-      tokenAddress: string,
-      recipient: string,
-      amountOrTokenID: BigNumberish,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "adminWithdraw(address,address,address,uint256)"(
+    "adminWithdraw(address,bytes)"(
       handlerAddress: string,
-      tokenAddress: string,
-      recipient: string,
-      amountOrTokenID: BigNumberish,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    adminWithdrawETH(
+      handlerAddress: string,
+      data: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "adminWithdrawETH(address,bytes)"(
+      handlerAddress: string,
+      data: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    calculateFee(
+      destinationDomainID: BigNumberish,
+      resourceID: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calculateFee(uint8,bytes32,bytes,bytes)"(
+      destinationDomainID: BigNumberish,
+      resourceID: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     cancelProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       dataHash: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "cancelProposal(uint8,uint64,bytes32)"(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       dataHash: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    checkSignature(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "checkSignature(uint8,uint64,bytes32,bytes,bytes)"(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     deposit(
-      destinationChainID: BigNumberish,
+      destinationDomainID: BigNumberish,
       resourceID: BytesLike,
-      data: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "deposit(uint8,bytes32,bytes)"(
-      destinationChainID: BigNumberish,
+    "deposit(uint8,bytes32,bytes,bytes)"(
+      destinationDomainID: BigNumberish,
       resourceID: BytesLike,
-      data: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    depositETH(
-      destinationChainID: BigNumberish,
-      resourceID: BytesLike,
-      data: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "depositETH(uint8,bytes32,bytes)"(
-      destinationChainID: BigNumberish,
-      resourceID: BytesLike,
-      data: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
     executeProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       data: BytesLike,
       resourceID: BytesLike,
+      revertOnFail: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "executeProposal(uint8,uint64,bytes,bytes32)"(
-      chainID: BigNumberish,
+    "executeProposal(uint8,uint64,bytes,bytes32,bool)"(
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       data: BytesLike,
       resourceID: BytesLike,
+      revertOnFail: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    getFee(
-      destinationChainID: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getFee(uint8)"(
-      destinationChainID: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getFees(overrides?: CallOverrides): Promise<[BigNumber, BigNumber, number]>;
-
-    "getFees()"(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber, number]>;
 
     getProposal(
-      originChainID: BigNumberish,
+      originDomainID: BigNumberish,
       depositNonce: BigNumberish,
-      dataHash: BytesLike,
+      resourceID: BytesLike,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, string[], string[], number, BigNumber] & {
-        _resourceID: string;
-        _dataHash: string;
-        _yesVotes: string[];
-        _noVotes: string[];
+      [number, BigNumber, number, number] & {
         _status: number;
-        _proposedBlock: BigNumber;
+        _yesVotes: BigNumber;
+        _yesVotesTotal: number;
+        _proposedBlock: number;
       }
     >;
 
-    "getProposal(uint8,uint64,bytes32)"(
-      originChainID: BigNumberish,
+    "getProposal(uint8,uint64,bytes32,bytes)"(
+      originDomainID: BigNumberish,
       depositNonce: BigNumberish,
-      dataHash: BytesLike,
+      resourceID: BytesLike,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, string[], string[], number, BigNumber] & {
-        _resourceID: string;
-        _dataHash: string;
-        _yesVotes: string[];
-        _noVotes: string[];
+      [number, BigNumber, number, number] & {
         _status: number;
-        _proposedBlock: BigNumber;
+        _yesVotes: BigNumber;
+        _yesVotesTotal: number;
+        _proposedBlock: number;
       }
     >;
 
@@ -1826,6 +2019,18 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getRoleMemberIndex(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getRoleMemberIndex(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     grantRole(
       role: BytesLike,
       account: string,
@@ -1854,6 +2059,13 @@ export class Bridge extends Contract {
 
     "isRelayer(address)"(
       relayer: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isValidForwarder(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
+    "isValidForwarder(address)"(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
@@ -1905,90 +2117,111 @@ export class Bridge extends Contract {
     ): Promise<void>;
 
     voteProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       resourceID: BytesLike,
-      dataHash: BytesLike,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "voteProposal(uint8,uint64,bytes32,bytes32)"(
-      chainID: BigNumberish,
+    "voteProposal(uint8,uint64,bytes32,bytes)"(
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       resourceID: BytesLike,
-      dataHash: BytesLike,
+      data: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    voteProposals(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signatures: BytesLike[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "voteProposals(uint8,uint64,bytes32,bytes,bytes[])"(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signatures: BytesLike[],
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
   filters: {
     Deposit(
-      destinationChainID: BigNumberish | null,
-      resourceID: BytesLike | null,
-      depositNonce: BigNumberish | null
+      destinationDomainID: null,
+      resourceID: null,
+      depositNonce: null,
+      user: string | null,
+      data: null,
+      handlerResponse: null
     ): TypedEventFilter<
-      [number, string, BigNumber],
+      [number, string, BigNumber, string, string, string],
       {
-        destinationChainID: number;
+        destinationDomainID: number;
         resourceID: string;
         depositNonce: BigNumber;
+        user: string;
+        data: string;
+        handlerResponse: string;
       }
     >;
+
+    FailedHandlerExecution(
+      lowLevelData: null
+    ): TypedEventFilter<[string], { lowLevelData: string }>;
+
+    FeeHandlerChanged(
+      newFeeHandler: null
+    ): TypedEventFilter<[string], { newFeeHandler: string }>;
 
     Paused(account: null): TypedEventFilter<[string], { account: string }>;
 
     ProposalEvent(
-      originChainID: BigNumberish | null,
-      depositNonce: BigNumberish | null,
-      status: BigNumberish | null,
-      resourceID: null,
+      originDomainID: null,
+      depositNonce: null,
+      status: null,
       dataHash: null
     ): TypedEventFilter<
-      [number, BigNumber, number, string, string],
+      [number, BigNumber, number, string],
       {
-        originChainID: number;
+        originDomainID: number;
         depositNonce: BigNumber;
         status: number;
-        resourceID: string;
         dataHash: string;
       }
     >;
 
     ProposalVote(
-      originChainID: BigNumberish | null,
-      depositNonce: BigNumberish | null,
-      status: BigNumberish | null,
-      resourceID: null
+      originDomainID: null,
+      depositNonce: null,
+      status: null,
+      dataHash: null
     ): TypedEventFilter<
       [number, BigNumber, number, string],
       {
-        originChainID: number;
+        originDomainID: number;
         depositNonce: BigNumber;
         status: number;
-        resourceID: string;
+        dataHash: string;
       }
     >;
 
     RelayerAdded(
-      relayer: string | null
+      relayer: null
     ): TypedEventFilter<[string], { relayer: string }>;
 
     RelayerRemoved(
-      relayer: string | null
+      relayer: null
     ): TypedEventFilter<[string], { relayer: string }>;
 
     RelayerThresholdChanged(
-      newThreshold: BigNumberish | null
+      newThreshold: null
     ): TypedEventFilter<[BigNumber], { newThreshold: BigNumber }>;
-
-    RoleAdminChanged(
-      role: BytesLike | null,
-      previousAdminRole: BytesLike | null,
-      newAdminRole: BytesLike | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; previousAdminRole: string; newAdminRole: string }
-    >;
 
     RoleGranted(
       role: BytesLike | null,
@@ -2016,13 +2249,21 @@ export class Bridge extends Contract {
 
     "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    MAX_RELAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_RELAYERS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "PERMIT_TYPEHASH()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     RELAYER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     "RELAYER_ROLE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    _chainID(overrides?: CallOverrides): Promise<BigNumber>;
+    _chainId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "_chainID()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "_chainId()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     _depositCounts(
       arg0: BigNumberish,
@@ -2034,17 +2275,9 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    _depositRecords(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    _domainID(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "_depositRecords(uint64,uint8)"(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    "_domainID()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     _expiry(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2054,29 +2287,21 @@ export class Bridge extends Contract {
 
     "_fee()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    _feeHandler(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "_feeHandler()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     _hasVotedOnProposal(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      arg2: string,
+      destNonce: BigNumberish,
+      dataHash: BytesLike,
+      relayer: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "_hasVotedOnProposal(uint72,bytes32,address)"(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      arg2: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    _proposals(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "_proposals(uint72,bytes32)"(
-      arg0: BigNumberish,
-      arg1: BytesLike,
+      destNonce: BigNumberish,
+      dataHash: BytesLike,
+      relayer: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -2094,25 +2319,9 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    _specialFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "_specialFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _specialFeeChainID(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "_specialFeeChainID()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _totalProposals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "_totalProposals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     _totalRelayers(overrides?: CallOverrides): Promise<BigNumber>;
 
     "_totalRelayers()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _wtokenAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "_wtokenAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     adminAddRelayer(
       relayerAddress: string,
@@ -2124,13 +2333,23 @@ export class Bridge extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    adminChangeFee(
-      newFee: BigNumberish,
+    adminChangeExpiry(
+      expiry: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "adminChangeFee(uint256)"(
-      newFee: BigNumberish,
+    "adminChangeExpiry(uint256)"(
+      expiry: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    adminChangeFeeHandler(
+      newFeeHandler: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "adminChangeFeeHandler(address)"(
+      newFeeHandler: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -2141,18 +2360,6 @@ export class Bridge extends Contract {
 
     "adminChangeRelayerThreshold(uint256)"(
       newThreshold: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    adminChangeSpecialFee(
-      newFee: BigNumberish,
-      chainID: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "adminChangeSpecialFee(uint256,uint8)"(
-      newFee: BigNumberish,
-      chainID: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -2182,6 +2389,40 @@ export class Bridge extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    adminSetDepositNonce(
+      domainID: BigNumberish,
+      nonce: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "adminSetDepositNonce(uint8,uint64)"(
+      domainID: BigNumberish,
+      nonce: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    adminSetDomainId(
+      domainID: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "adminSetDomainId(uint8)"(
+      domainID: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    adminSetForwarder(
+      forwarder: string,
+      valid: boolean,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "adminSetForwarder(address,bool)"(
+      forwarder: string,
+      valid: boolean,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     adminSetGenericResource(
       handlerAddress: string,
       resourceID: BytesLike,
@@ -2199,6 +2440,30 @@ export class Bridge extends Contract {
       depositFunctionSig: BytesLike,
       depositFunctionDepositerOffset: BigNumberish,
       executeFunctionSig: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    adminSetNative(
+      resourceID: BytesLike,
+      nativeAddress: string,
+      isNative: boolean,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "adminSetNative(bytes32,address,bool)"(
+      resourceID: BytesLike,
+      nativeAddress: string,
+      isNative: boolean,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    adminSetNativeResource(
+      handlerAddress: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "adminSetNativeResource(address)"(
+      handlerAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -2220,117 +2485,125 @@ export class Bridge extends Contract {
 
     "adminUnpauseTransfers()"(overrides?: Overrides): Promise<BigNumber>;
 
-    adminUpdateBridgeAddress(
-      handlerAddress: string,
-      newBridgeAddress: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "adminUpdateBridgeAddress(address,address)"(
-      handlerAddress: string,
-      newBridgeAddress: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
     adminWithdraw(
       handlerAddress: string,
-      tokenAddress: string,
-      recipient: string,
-      amountOrTokenID: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "adminWithdraw(address,address,address,uint256)"(
+    "adminWithdraw(address,bytes)"(
       handlerAddress: string,
-      tokenAddress: string,
-      recipient: string,
-      amountOrTokenID: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    adminWithdrawETH(
+      handlerAddress: string,
+      data: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "adminWithdrawETH(address,bytes)"(
+      handlerAddress: string,
+      data: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    calculateFee(
+      destinationDomainID: BigNumberish,
+      resourceID: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calculateFee(uint8,bytes32,bytes,bytes)"(
+      destinationDomainID: BigNumberish,
+      resourceID: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     cancelProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       dataHash: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "cancelProposal(uint8,uint64,bytes32)"(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       dataHash: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    checkSignature(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "checkSignature(uint8,uint64,bytes32,bytes,bytes)"(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     deposit(
-      destinationChainID: BigNumberish,
+      destinationDomainID: BigNumberish,
       resourceID: BytesLike,
-      data: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
-    "deposit(uint8,bytes32,bytes)"(
-      destinationChainID: BigNumberish,
+    "deposit(uint8,bytes32,bytes,bytes)"(
+      destinationDomainID: BigNumberish,
       resourceID: BytesLike,
-      data: BytesLike,
-      overrides?: PayableOverrides
-    ): Promise<BigNumber>;
-
-    depositETH(
-      destinationChainID: BigNumberish,
-      resourceID: BytesLike,
-      data: BytesLike,
-      overrides?: PayableOverrides
-    ): Promise<BigNumber>;
-
-    "depositETH(uint8,bytes32,bytes)"(
-      destinationChainID: BigNumberish,
-      resourceID: BytesLike,
-      data: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     executeProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       data: BytesLike,
       resourceID: BytesLike,
+      revertOnFail: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "executeProposal(uint8,uint64,bytes,bytes32)"(
-      chainID: BigNumberish,
+    "executeProposal(uint8,uint64,bytes,bytes32,bool)"(
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       data: BytesLike,
       resourceID: BytesLike,
+      revertOnFail: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
-
-    getFee(
-      destinationChainID: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getFee(uint8)"(
-      destinationChainID: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getFees(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getFees()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getProposal(
-      originChainID: BigNumberish,
+      originDomainID: BigNumberish,
       depositNonce: BigNumberish,
-      dataHash: BytesLike,
+      resourceID: BytesLike,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getProposal(uint8,uint64,bytes32)"(
-      originChainID: BigNumberish,
+    "getProposal(uint8,uint64,bytes32,bytes)"(
+      originDomainID: BigNumberish,
       depositNonce: BigNumberish,
-      dataHash: BytesLike,
+      resourceID: BytesLike,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -2366,6 +2639,18 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getRoleMemberIndex(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getRoleMemberIndex(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     grantRole(
       role: BytesLike,
       account: string,
@@ -2394,6 +2679,16 @@ export class Bridge extends Contract {
 
     "isRelayer(address)"(
       relayer: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isValidForwarder(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isValidForwarder(address)"(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -2445,18 +2740,36 @@ export class Bridge extends Contract {
     ): Promise<BigNumber>;
 
     voteProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       resourceID: BytesLike,
-      dataHash: BytesLike,
+      data: BytesLike,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "voteProposal(uint8,uint64,bytes32,bytes32)"(
-      chainID: BigNumberish,
+    "voteProposal(uint8,uint64,bytes32,bytes)"(
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       resourceID: BytesLike,
-      dataHash: BytesLike,
+      data: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    voteProposals(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signatures: BytesLike[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "voteProposals(uint8,uint64,bytes32,bytes,bytes[])"(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signatures: BytesLike[],
       overrides?: Overrides
     ): Promise<BigNumber>;
   };
@@ -2470,13 +2783,23 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    MAX_RELAYERS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MAX_RELAYERS()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "PERMIT_TYPEHASH()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     RELAYER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "RELAYER_ROLE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    _chainID(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    _chainId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "_chainID()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "_chainId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     _depositCounts(
       arg0: BigNumberish,
@@ -2488,17 +2811,9 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    _depositRecords(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    _domainID(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "_depositRecords(uint64,uint8)"(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    "_domainID()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     _expiry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -2508,29 +2823,21 @@ export class Bridge extends Contract {
 
     "_fee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    _feeHandler(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "_feeHandler()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     _hasVotedOnProposal(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      arg2: string,
+      destNonce: BigNumberish,
+      dataHash: BytesLike,
+      relayer: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "_hasVotedOnProposal(uint72,bytes32,address)"(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      arg2: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    _proposals(
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "_proposals(uint72,bytes32)"(
-      arg0: BigNumberish,
-      arg1: BytesLike,
+      destNonce: BigNumberish,
+      dataHash: BytesLike,
+      relayer: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2550,33 +2857,9 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    _specialFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "_specialFee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    _specialFeeChainID(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "_specialFeeChainID()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    _totalProposals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "_totalProposals()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     _totalRelayers(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "_totalRelayers()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    _wtokenAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "_wtokenAddress()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2590,13 +2873,23 @@ export class Bridge extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    adminChangeFee(
-      newFee: BigNumberish,
+    adminChangeExpiry(
+      expiry: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "adminChangeFee(uint256)"(
-      newFee: BigNumberish,
+    "adminChangeExpiry(uint256)"(
+      expiry: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    adminChangeFeeHandler(
+      newFeeHandler: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "adminChangeFeeHandler(address)"(
+      newFeeHandler: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -2607,18 +2900,6 @@ export class Bridge extends Contract {
 
     "adminChangeRelayerThreshold(uint256)"(
       newThreshold: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    adminChangeSpecialFee(
-      newFee: BigNumberish,
-      chainID: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "adminChangeSpecialFee(uint256,uint8)"(
-      newFee: BigNumberish,
-      chainID: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -2650,6 +2931,40 @@ export class Bridge extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    adminSetDepositNonce(
+      domainID: BigNumberish,
+      nonce: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "adminSetDepositNonce(uint8,uint64)"(
+      domainID: BigNumberish,
+      nonce: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    adminSetDomainId(
+      domainID: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "adminSetDomainId(uint8)"(
+      domainID: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    adminSetForwarder(
+      forwarder: string,
+      valid: boolean,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "adminSetForwarder(address,bool)"(
+      forwarder: string,
+      valid: boolean,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     adminSetGenericResource(
       handlerAddress: string,
       resourceID: BytesLike,
@@ -2667,6 +2982,30 @@ export class Bridge extends Contract {
       depositFunctionSig: BytesLike,
       depositFunctionDepositerOffset: BigNumberish,
       executeFunctionSig: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    adminSetNative(
+      resourceID: BytesLike,
+      nativeAddress: string,
+      isNative: boolean,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "adminSetNative(bytes32,address,bool)"(
+      resourceID: BytesLike,
+      nativeAddress: string,
+      isNative: boolean,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    adminSetNativeResource(
+      handlerAddress: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "adminSetNativeResource(address)"(
+      handlerAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -2690,117 +3029,125 @@ export class Bridge extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    adminUpdateBridgeAddress(
-      handlerAddress: string,
-      newBridgeAddress: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "adminUpdateBridgeAddress(address,address)"(
-      handlerAddress: string,
-      newBridgeAddress: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
     adminWithdraw(
       handlerAddress: string,
-      tokenAddress: string,
-      recipient: string,
-      amountOrTokenID: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "adminWithdraw(address,address,address,uint256)"(
+    "adminWithdraw(address,bytes)"(
       handlerAddress: string,
-      tokenAddress: string,
-      recipient: string,
-      amountOrTokenID: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    adminWithdrawETH(
+      handlerAddress: string,
+      data: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "adminWithdrawETH(address,bytes)"(
+      handlerAddress: string,
+      data: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    calculateFee(
+      destinationDomainID: BigNumberish,
+      resourceID: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "calculateFee(uint8,bytes32,bytes,bytes)"(
+      destinationDomainID: BigNumberish,
+      resourceID: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     cancelProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       dataHash: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "cancelProposal(uint8,uint64,bytes32)"(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       dataHash: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    checkSignature(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "checkSignature(uint8,uint64,bytes32,bytes,bytes)"(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     deposit(
-      destinationChainID: BigNumberish,
+      destinationDomainID: BigNumberish,
       resourceID: BytesLike,
-      data: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
-    "deposit(uint8,bytes32,bytes)"(
-      destinationChainID: BigNumberish,
+    "deposit(uint8,bytes32,bytes,bytes)"(
+      destinationDomainID: BigNumberish,
       resourceID: BytesLike,
-      data: BytesLike,
-      overrides?: PayableOverrides
-    ): Promise<PopulatedTransaction>;
-
-    depositETH(
-      destinationChainID: BigNumberish,
-      resourceID: BytesLike,
-      data: BytesLike,
-      overrides?: PayableOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "depositETH(uint8,bytes32,bytes)"(
-      destinationChainID: BigNumberish,
-      resourceID: BytesLike,
-      data: BytesLike,
+      depositData: BytesLike,
+      feeData: BytesLike,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     executeProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       data: BytesLike,
       resourceID: BytesLike,
+      revertOnFail: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "executeProposal(uint8,uint64,bytes,bytes32)"(
-      chainID: BigNumberish,
+    "executeProposal(uint8,uint64,bytes,bytes32,bool)"(
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       data: BytesLike,
       resourceID: BytesLike,
+      revertOnFail: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
-
-    getFee(
-      destinationChainID: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getFee(uint8)"(
-      destinationChainID: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getFees(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getFees()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getProposal(
-      originChainID: BigNumberish,
+      originDomainID: BigNumberish,
       depositNonce: BigNumberish,
-      dataHash: BytesLike,
+      resourceID: BytesLike,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getProposal(uint8,uint64,bytes32)"(
-      originChainID: BigNumberish,
+    "getProposal(uint8,uint64,bytes32,bytes)"(
+      originDomainID: BigNumberish,
       depositNonce: BigNumberish,
-      dataHash: BytesLike,
+      resourceID: BytesLike,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2836,6 +3183,18 @@ export class Bridge extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getRoleMemberIndex(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getRoleMemberIndex(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     grantRole(
       role: BytesLike,
       account: string,
@@ -2867,6 +3226,16 @@ export class Bridge extends Contract {
 
     "isRelayer(address)"(
       relayer: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isValidForwarder(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isValidForwarder(address)"(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2921,18 +3290,36 @@ export class Bridge extends Contract {
     ): Promise<PopulatedTransaction>;
 
     voteProposal(
-      chainID: BigNumberish,
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       resourceID: BytesLike,
-      dataHash: BytesLike,
+      data: BytesLike,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "voteProposal(uint8,uint64,bytes32,bytes32)"(
-      chainID: BigNumberish,
+    "voteProposal(uint8,uint64,bytes32,bytes)"(
+      domainID: BigNumberish,
       depositNonce: BigNumberish,
       resourceID: BytesLike,
-      dataHash: BytesLike,
+      data: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    voteProposals(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signatures: BytesLike[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "voteProposals(uint8,uint64,bytes32,bytes,bytes[])"(
+      domainID: BigNumberish,
+      depositNonce: BigNumberish,
+      resourceID: BytesLike,
+      data: BytesLike,
+      signatures: BytesLike[],
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };

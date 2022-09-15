@@ -236,11 +236,24 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       }
     };
     const getBridgeFee = async () => {
-      if (homeBridge && destinationBridge) {
-        const targetChainID = await destinationBridge._chainID();
-        const fee = await homeBridge.getFee(targetChainID);
-        const bridgeFee = Number(utils.formatEther(fee));
-        setBridgeFee(bridgeFee);
+      if (homeBridge && destinationBridge && homeChain && selectedToken) {
+        const targetDomainID = await destinationBridge._domainID();
+        const token = homeChain.tokens.find(
+          (token) => token.address === selectedToken
+        );
+        if(token) {
+          // NOTE: The v2 chainbridge contracts allow dynamic fees based on payload
+          //       this is not being used by meter passport currently so we
+          //       do not need to create the packed data for calculating the bridge fees.
+          const fee = await homeBridge.calculateFee(
+            targetDomainID,
+            token.resourceId,
+            "",
+            ""
+          );
+          const bridgeFee = Number(utils.formatEther(fee));
+          setBridgeFee(bridgeFee);
+        }
       }
     };
     getRelayerThreshold();
@@ -251,13 +264,12 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     if (homeChain && destinationBridge && depositNonce) {
       destinationBridge.on(
         destinationBridge.filters.ProposalEvent(
-          homeChain.chainId,
-          BigNumber.from(depositNonce),
+          null,
           null,
           null,
           null
         ),
-        (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
+        (originChainId, depositNonce, status, dataHash, tx) => {
           switch (BigNumber.from(status).toNumber()) {
             case 1:
               tokensDispatch({
@@ -285,12 +297,12 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
       destinationBridge.on(
         destinationBridge.filters.ProposalVote(
-          homeChain.chainId,
-          BigNumber.from(depositNonce),
+          null,
+          null,
           null,
           null
         ),
-        async (originChainId, depositNonce, status, resourceId, tx) => {
+        async (originChainId, depositNonce, status, dataHash, tx) => {
           const txReceipt = await tx.getTransactionReceipt();
           if (txReceipt.status === 1) {
             setDepositVotes(depositVotes + 1);
@@ -338,6 +350,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       console.log("No signer");
       return;
     }
+    const sender = await signer.getAddress();
 
     const token = homeChain.tokens.find(
       (token) => token.address === tokenAddress
@@ -354,7 +367,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     const controller = XCAmpleControllerFactory.connect(homeChain.controller, signer);
     const erc20Decimals = tokens[tokenAddress].decimals;
 
-
     const [epoch, totalSupply] = await controller.globalAmpleforthEpochAndAMPLSupply();
     const data = packXCTransferData(address, recipient, utils.parseUnits(amount.toString(), erc20Decimals), totalSupply);
 
@@ -365,7 +377,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       );
 
       const gasLimit = 500000;
-
       if (Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount) {
         // if (
         //   Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
@@ -407,11 +418,14 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
       homeBridge.once(
         homeBridge.filters.Deposit(
-          destinationChain.chainId,
-          token.resourceId,
-          null
+          null,
+          null,
+          null,
+          sender,
+          null,
+          null,
         ),
-        (destChainId, resourceId, depositNonce) => {
+        (destChainId, resourceId, depositNonce, user, data, handlerResponse) => {
           setDepositNonce(`${depositNonce.toString()}`);
           setTransactionStatus("In Transit");
         }
@@ -422,6 +436,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           destinationChain.chainId,
           token.resourceId,
           data,
+          [],
           {
             gasPrice: utils.parseUnits(
               (homeChain.defaultGasPrice || gasPrice).toString(),
