@@ -9,7 +9,7 @@ import {
 } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { useWeb3 } from "@chainsafe/web3-context";
+import { useWeb3 } from "@meterio/web3-context";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -302,7 +302,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 href={process.env.REACT_APP_SUPPORT_URL}
                 target="_blank"
               >
-                <Button variant="outline">
+                <Button className={classes.button} variant="outline">
                   Ask a question on {process.env.REACT_APP_SUPPORT_SERVICE}
                 </Button>
               </a>
