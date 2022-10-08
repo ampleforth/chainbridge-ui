@@ -202,7 +202,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         const destChain = chainbridgeConfig.chains.find(
           (c) => c.networkId !== network
         );
-
         destChain && setDestinationChain(destChain);
       }
 
@@ -236,24 +235,13 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       }
     };
     const getBridgeFee = async () => {
-      if (homeBridge && destinationBridge && homeChain && selectedToken) {
+      if (homeBridge && destinationBridge && homeChain) {
         const targetDomainID = await destinationBridge._domainID();
-        const token = homeChain.tokens.find(
-          (token) => token.address === selectedToken
+        const fee = await homeBridge.getFee(
+          targetDomainID
         );
-        if(token) {
-          // NOTE: The v2 chainbridge contracts allow dynamic fees based on payload
-          //       this is not being used by meter passport currently so we
-          //       do not need to create the packed data for calculating the bridge fees.
-          const fee = await homeBridge.calculateFee(
-            targetDomainID,
-            token.resourceId,
-            "",
-            ""
-          );
-          const bridgeFee = Number(utils.formatEther(fee));
-          setBridgeFee(bridgeFee);
-        }
+        const bridgeFee = Number(utils.formatEther(fee));
+        setBridgeFee(bridgeFee);
       }
     };
     getRelayerThreshold();

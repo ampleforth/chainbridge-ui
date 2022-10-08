@@ -8,10 +8,7 @@ import { Provider } from "@ethersproject/providers";
 import type { Bridge } from "./Bridge";
 
 export class BridgeFactory {
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): Bridge {
+  static connect(address: string, signerOrProvider: Signer | Provider): Bridge {
     return new Contract(address, _abi, signerOrProvider) as Bridge;
   }
 }
@@ -72,7 +69,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "InviladSignature",
+    name: "InvalidSignature",
     type: "error",
   },
   {
@@ -134,6 +131,44 @@ const _abi = [
       },
     ],
     name: "FailedHandlerExecution",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newFee",
+        type: "uint256",
+      },
+    ],
+    name: "FeeChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "tokenAddress",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "FeeDistributed",
     type: "event",
   },
   {
@@ -380,7 +415,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "_domainId",
+    name: "_chainId",
     outputs: [
       {
         internalType: "uint256",
@@ -457,6 +492,32 @@ const _abi = [
         internalType: "contract IFeeHandler",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "_feeReserve",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "_fee_",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -565,19 +626,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "newFeeHandler",
-        type: "address",
-      },
-    ],
-    name: "adminChangeFeeHandler",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "uint256",
         name: "newThreshold",
         type: "uint256",
@@ -598,12 +646,66 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bytes32",
+        name: "resourceID",
+        type: "bytes32",
+      },
+      {
+        internalType: "address",
+        name: "contractAddress",
+        type: "address",
+      },
+    ],
+    name: "adminRemoveGenericResource",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "relayerAddress",
         type: "address",
       },
     ],
     name: "adminRemoveRelayer",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "resourceID",
+        type: "bytes32",
+      },
+      {
+        internalType: "address",
+        name: "tokenAddress",
+        type: "address",
+      },
+      {
+        internalType: "bool",
+        name: "isNative",
+        type: "bool",
+      },
+    ],
+    name: "adminRemoveResourceId",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "destinationDomainID",
+        type: "uint8",
+      },
+    ],
+    name: "adminRemoveSpecialFee",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -660,6 +762,19 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "newFee",
+        type: "uint256",
+      },
+    ],
+    name: "adminSetFee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "forwarder",
         type: "address",
@@ -699,7 +814,7 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "depositFunctionDepositerOffset",
+        name: "depositFunctionDepositorOffset",
         type: "uint256",
       },
       {
@@ -709,42 +824,6 @@ const _abi = [
       },
     ],
     name: "adminSetGenericResource",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "resourceID",
-        type: "bytes32",
-      },
-      {
-        internalType: "address",
-        name: "nativeAddress",
-        type: "address",
-      },
-      {
-        internalType: "bool",
-        name: "isNative",
-        type: "bool",
-      },
-    ],
-    name: "adminSetNative",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "handlerAddress",
-        type: "address",
-      },
-    ],
-    name: "adminSetNativeResource",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -766,8 +845,31 @@ const _abi = [
         name: "tokenAddress",
         type: "address",
       },
+      {
+        internalType: "bool",
+        name: "isNative",
+        type: "bool",
+      },
     ],
     name: "adminSetResource",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "destinationDomainID",
+        type: "uint8",
+      },
+      {
+        internalType: "uint256",
+        name: "_specialFee",
+        type: "uint256",
+      },
+    ],
+    name: "adminSetSpecialFee",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -813,40 +915,6 @@ const _abi = [
     name: "adminWithdrawETH",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint8",
-        name: "destinationDomainID",
-        type: "uint8",
-      },
-      {
-        internalType: "bytes32",
-        name: "resourceID",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes",
-        name: "depositData",
-        type: "bytes",
-      },
-      {
-        internalType: "bytes",
-        name: "feeData",
-        type: "bytes",
-      },
-    ],
-    name: "calculateFee",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -970,6 +1038,25 @@ const _abi = [
     name: "executeProposal",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "destinationDomainID",
+        type: "uint8",
+      },
+    ],
+    name: "getFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -1259,6 +1346,44 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    name: "special",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    name: "specialFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address payable[]",
         name: "addrs",
         type: "address[]",
@@ -1269,7 +1394,7 @@ const _abi = [
         type: "uint256[]",
       },
     ],
-    name: "transferFunds",
+    name: "transferFee",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
